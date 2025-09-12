@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
       Tab 1
@@ -12,6 +12,115 @@
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
+<p>hello1</p>
+<p>hello2</p>
+</ion-content> -->
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Billing & Print</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Printer controls -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Printer</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="full" (click)="enableBluetooth()">Enable Bluetooth</ion-button>
+      <ion-button expand="full" (click)="listDevices()">List Paired Devices</ion-button>
+
+      <ion-list *ngIf="devices.length > 0">
+        <ion-item *ngFor="let d of devices">
+          <ion-label>
+            <h3>{{ d.name || 'Unknown' }}</h3>
+            <p>{{ d.address || d.id }}</p>
+          </ion-label>
+          <ion-button slot="end" (click)="connect(d)">Connect</ion-button>
+        </ion-item>
+      </ion-list>
+
+      <p *ngIf="selectedDevice"><strong>Connected to:</strong> {{ selectedDevice.name || selectedDevice.address }}</p>
+      <p><small>{{ statusMessage }}</small></p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Billing form -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Add item</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Item name</ion-label>
+        <ion-input [(ngModel)]="itemName" name="itemName"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Quantity</ion-label>
+        <ion-input type="number" [(ngModel)]="quantity" name="quantity"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Price (number)</ion-label>
+        <ion-input type="number" [(ngModel)]="price" name="price"></ion-input>
+      </ion-item>
+
+      <ion-button expand="full" color="success" (click)="addItem()">Add to bill</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Items + print -->
+  <ion-card *ngIf="items.length > 0">
+  <ion-card-header>
+    <ion-card-title>Current Bill</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+
+    <!-- Make table horizontally scrollable -->
+    <div class="bill-table">
+      <ion-grid>
+        <ion-row class="table-header">
+          <ion-col size="4"><b>Item</b></ion-col>
+          <ion-col size="3" class="ion-text-center"><b>Qty</b></ion-col>
+          <ion-col size="2" class="ion-text-center"><b>Price</b></ion-col>
+          <ion-col size="2" class="ion-text-center"><b>Total</b></ion-col>
+          <ion-col size="1"></ion-col>
+        </ion-row>
+
+        <ion-row *ngFor="let it of items; let i = index" class="table-row">
+          <ion-col size="4" class="truncate">{{ it.name }}</ion-col>
+
+          <ion-col size="3" class="ion-text-center">
+            <ion-button size="small" fill="outline" shape="round" (click)="decreaseQty(i)">-</ion-button>
+            <span class="qty">{{ it.qty }}</span>
+            <ion-button size="small" fill="outline" shape="round" (click)="increaseQty(i)">+</ion-button>
+          </ion-col>
+
+          <ion-col size="2" class="ion-text-center">{{ it.price }}</ion-col>
+          <ion-col size="2" class="ion-text-center">{{ it.qty * it.price }}</ion-col>
+
+          <ion-col size="1" class="ion-text-center">
+            <ion-button size="small" fill="clear" color="danger" (click)="removeItem(i)">
+              ✕
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="table-footer">
+          <ion-col size="9" class="ion-text-end"><b>Grand Total:</b></ion-col>
+          <ion-col size="3" class="ion-text-center"><b>{{ grandTotal }}</b></ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <ion-button expand="full" color="primary" (click)="printReceipt()">
+      Print Receipt (Thermal)
+    </ion-button>
+  </ion-card-content>
+</ion-card>
+
 </ion-content>
