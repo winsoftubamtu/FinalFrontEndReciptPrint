@@ -1,0 +1,7 @@
+{
+  "name": "printbill",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
