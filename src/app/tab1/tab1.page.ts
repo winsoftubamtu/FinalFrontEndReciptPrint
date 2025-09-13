@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
-  IonButton, IonItem, IonList, IonLabel, IonInput, IonTextarea, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent
+  IonButton, IonItem, IonList, IonLabel, IonInput, IonTextarea, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent,
+  IonRadio,
+  IonSegment,
+  IonSegmentButton
 } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 // Cordova wrappers (ngx)
@@ -17,13 +20,14 @@ import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions
   imports: [CommonModule, FormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonButton, IonItem, IonList, IonLabel, IonInput, IonTextarea,
-    IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent, ExploreContainerComponent],
+    IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonRadio,IonSegment, IonSegmentButton, ExploreContainerComponent],
     providers: [BluetoothSerial, AndroidPermissions]
 })
 export class Tab1Page implements OnInit {
   devices: any[] = [];
   selectedDevice: any = null;
   statusMessage = '';
+  paymentType: string = 'Cash'; // default selected
    // Billing form
   itemName = '';
   quantity: number | null = null;
@@ -102,22 +106,50 @@ export class Tab1Page implements OnInit {
     });
   }
 
-  connect(device: any) {
-    // Use device.address (MAC) — sometimes device.id is also present
-    const addr = device.address || device.id;
-    this.selectedDevice = device;
-    // connect() returns an Observable; subscribe to get connect/disconnect events
-    this.bluetoothSerial.connect(addr).subscribe(
-      () => this.statusMessage = 'Connected to ' + (device.name || addr),
-      err => this.statusMessage = 'Connection failed or disconnected: ' + JSON.stringify(err)
-    );
-  }
+  
+//button connect and disconnect 
+toggleConnection(device: any) {
+  const addr = device.address || device.id;
 
-  disconnect() {
+  // If already connected to this device → disconnect
+  if (this.selectedDevice && this.selectedDevice.address === addr) {
     this.bluetoothSerial.disconnect();
     this.selectedDevice = null;
-    this.statusMessage = 'Disconnected';
+    this.statusMessage = 'Disconnected from ' + (device.name || addr);
+  } else {
+    // Try connecting
+    this.statusMessage = 'Connecting to ' + (device.name || addr) + '...';
+    this.bluetoothSerial.connect(addr).subscribe(
+      () => {
+        this.selectedDevice = device;
+        this.statusMessage = 'Connected to ' + (device.name || addr);
+      },
+      err => {
+        this.selectedDevice = null;
+        this.statusMessage = 'Connection failed: ' + JSON.stringify(err);
+      }
+    );
   }
+}
+
+
+
+  // connect(device: any) {
+  //   // Use device.address (MAC) — sometimes device.id is also present
+  //   const addr = device.address || device.id;
+  //   this.selectedDevice = device;
+  //   // connect() returns an Observable; subscribe to get connect/disconnect events
+  //   this.bluetoothSerial.connect(addr).subscribe(
+  //     () => this.statusMessage = 'Connected to ' + (device.name || addr),
+  //     err => this.statusMessage = 'Connection failed or disconnected: ' + JSON.stringify(err)
+  //   );
+  // }
+
+  // disconnect() {
+  //   this.bluetoothSerial.disconnect();
+  //   this.selectedDevice = null;
+  //   this.statusMessage = 'Disconnected';
+  // }
 
   /* ----------------------
      Billing helpers
@@ -158,6 +190,8 @@ increaseQty(index: number) {
   this.items[index].qty++;
 }
 
+
+
 decreaseQty(index: number) {
   if (this.items[index].qty > 1) {
     this.items[index].qty--;
@@ -165,6 +199,7 @@ decreaseQty(index: number) {
     this.items.splice(index, 1); // remove if qty goes below 1
   }
 }
+
 
   removeItem(idx: number) {
     this.items.splice(idx, 1);
@@ -193,71 +228,133 @@ decreaseQty(index: number) {
     return `${nm}${qtyStr}${priceStr}${totalStr}`;
   }
 
- async printReceipt() {
-    if (!this.selectedDevice) {
-      this.statusMessage = 'Select and connect a printer first!';
-      return;
-    }
-    if (!this.items || this.items.length === 0) {
-      this.statusMessage = 'Add at least one item to print';
-      return;
-    }
 
-    // ESC/POS variables
-    const ESC = '\x1B';
-    const GS = '\x1D';
+//  async printReceipt() {
+//     if (!this.selectedDevice) {
+//       this.statusMessage = 'Select and connect a printer first!';
+//       return;
+//     }
+//     if (!this.items || this.items.length === 0) {
+//       this.statusMessage = 'Add at least one item to print';
+//       return;
+//     }
 
-    let grandTotal = 0;
-    let receipt = '';
+//     // ESC/POS variables
+//     const ESC = '\x1B';
+//     const GS = '\x1D';
 
-    // Header: center title
-    receipt += ESC + 'a' + String.fromCharCode(1); // center
-    receipt += ESC + '\x45' + String.fromCharCode(1); // bold on (ESC E 1)
-    receipt += '*** My Hotel & Bakery ***\n';
-    receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
-    receipt += ESC + 'a' + String.fromCharCode(0); // left
+//     let grandTotal = 0;
+//     let receipt = '';
 
-    receipt += `Date: ${new Date().toLocaleString()}\n`;
-    receipt += '--------------------------------\n';
-    receipt += 'Item            QTY  PRICE  TOTAL\n';
-    receipt += '--------------------------------\n';
+//     // Header: center title
+//     receipt += ESC + 'a' + String.fromCharCode(1); // center
+//     receipt += ESC + '\x45' + String.fromCharCode(1); // bold on (ESC E 1)
+//     receipt += '*** My Hotel & Bakery ***\n';
+//     receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
+//     receipt += ESC + 'a' + String.fromCharCode(0); // left
 
-    this.items.forEach(i => {
-      const total = i.qty * i.price;
-      grandTotal += total;
-      receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
-    });
+//     receipt += `Date: ${new Date().toLocaleString()}\n`;
+//     receipt += '--------------------------------\n';
+//     receipt += 'Item            QTY  PRICE  TOTAL\n';
+//     receipt += '--------------------------------\n';
 
-    receipt += '--------------------------------\n';
+//     this.items.forEach(i => {
+//       const total = i.qty * i.price;
+//       grandTotal += total;
+//       receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
+//     });
 
-    // Grand total: center/right + bold + double size (note: double size may vary by model)
-    receipt += ESC + 'a' + String.fromCharCode(2); // right align (or 1=center)
-    receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
-    // double size (GS ! n) - optional: many printers support GS ! 0x11
-    receipt += GS + '!' + '\x11';
-    receipt += `Grand Total: Rs${grandTotal}\n`;
-    // reset size and bold
-    receipt += GS + '!' + '\x00';
-    receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
-    receipt += ESC + 'a' + String.fromCharCode(0); // left align
+//     receipt += '--------------------------------\n';
 
-    receipt += '\nThank you! Visit Again!\n\n\n';
+//     // Grand total: center/right + bold + double size (note: double size may vary by model)
+//     receipt += ESC + 'a' + String.fromCharCode(2); // right align (or 1=center)
+//     receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
+//     // double size (GS ! n) - optional: many printers support GS ! 0x11
+//     receipt += GS + '!' + '\x11';
+//     receipt += `Grand Total: Rs${grandTotal}\n`;
+//     // reset size and bold
+//     receipt += GS + '!' + '\x00';
+//     receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
+//     receipt += ESC + 'a' + String.fromCharCode(0); // left align
 
-    // Try feed and cut (printer dependent) - if the model supports cut
-    receipt += GS + 'V' + '\x00'; // common cut command (may work or be ignored)
+//     receipt += '\nThank you! Visit Again!\n\n\n';
 
-    // Convert to ArrayBuffer & send
-    const buf = this.strToArrayBuffer(receipt);
-    try {
-      await this.bluetoothSerial.write(buf);
-      this.statusMessage = 'Receipt sent to printer';
-    } catch (err) {
-      this.statusMessage = 'Print failed: ' + JSON.stringify(err);
-    }
+//     // Try feed and cut (printer dependent) - if the model supports cut
+//     receipt += GS + 'V' + '\x00'; // common cut command (may work or be ignored)
+
+//     // Convert to ArrayBuffer & send
+//     const buf = this.strToArrayBuffer(receipt);
+//     try {
+//       await this.bluetoothSerial.write(buf);
+//       this.statusMessage = 'Receipt sent to printer';
+//     } catch (err) {
+//       this.statusMessage = 'Print failed: ' + JSON.stringify(err);
+//     }
+//   }
+
+async printReceipt() {
+  if (!this.selectedDevice) {
+    this.statusMessage = 'Select and connect a printer first!';
+    return;
   }
+  if (!this.items || this.items.length === 0) {
+    this.statusMessage = 'Add at least one item to print';
+    return;
+  }
+
+  const ESC = '\x1B';
+  const GS = '\x1D';
+
+  let grandTotal = 0;
+  let receipt = '';
+
+  // Header
+  receipt += ESC + 'a' + String.fromCharCode(1); // center
+  receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
+  receipt += '*** My Hotel & Bakery ***\n';
+  receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
+  receipt += ESC + 'a' + String.fromCharCode(0); // left
+
+  receipt += `Date: ${new Date().toLocaleString()}\n`;
+  receipt += `Payment: ${this.paymentType}\n`;   // ✅ Added here
+  receipt += '--------------------------------\n';
+
+  receipt += '--------------------------------\n';
+  receipt += 'Item            QTY  PRICE  TOTAL\n';
+  receipt += '--------------------------------\n';
+
+  this.items.forEach(i => {
+    const total = i.qty * i.price;
+    grandTotal += total;
+    receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
+  });
+
+  receipt += '--------------------------------\n';
+
+  // Grand total (normal size, bold only)
+  receipt += ESC + 'a' + String.fromCharCode(2); // right align
+  receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
+  receipt += `Grand Total: Rs ${grandTotal}\n`;
+  receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
+  receipt += ESC + 'a' + String.fromCharCode(0); // left align
+
+  receipt += '\nThank you! Visit Again!\n\n\n';
+
+  // Feed & cut
+  receipt += GS + 'V' + '\x00';
+
+  const buf = this.strToArrayBuffer(receipt);
+  try {
+    await this.bluetoothSerial.write(buf);
+    this.statusMessage = 'Receipt sent to printer';
+  } catch (err) {
+    this.statusMessage = 'Print failed: ' + JSON.stringify(err);
+  }
+}
 
 
   get grandTotal(): number {
   return this.items.reduce((sum, it) => sum + (it.qty * it.price), 0);
   }
+
 }

@@ -39,7 +39,11 @@
             <h3>{{ d.name || 'Unknown' }}</h3>
             <p>{{ d.address || d.id }}</p>
           </ion-label>
-          <ion-button slot="end" (click)="connect(d)">Connect</ion-button>
+          <!-- <ion-button slot="end" (click)="connect(d)">Connect</ion-button> -->
+           <ion-button slot="end" (click)="toggleConnection(d)">
+  {{ selectedDevice?.address === d.address ? 'Disconnect' : 'Connect' }}
+</ion-button>
+
         </ion-item>
       </ion-list>
 
@@ -117,8 +121,23 @@
       </ion-grid>
     </div>
 
+<!-- Payment type selection -->
+
+ <ion-item lines="none" class="payment-type-row">
+  <ion-label position="stacked" class="payment-label">Payment</ion-label>
+  <ion-segment [(ngModel)]="paymentType" value="Cash" class="payment-segment">
+    <ion-segment-button value="Cash">
+      <ion-label>Cash</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="Online">
+      <ion-label>Online</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-item>
+
+
     <ion-button expand="full" color="primary" (click)="printReceipt()">
-      Print Receipt (Thermal)
+      Print Receipt
     </ion-button>
   </ion-card-content>
 </ion-card>
