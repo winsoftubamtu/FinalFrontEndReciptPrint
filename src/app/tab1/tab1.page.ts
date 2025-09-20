@@ -27,6 +27,8 @@ export class Tab1Page implements OnInit {
   devices: any[] = [];
   selectedDevice: any = null;
   statusMessage = '';
+  //expiryDate = new Date("2025-09-13"); // YYYY-MM-DD format
+  expiryDate = new Date("2026-09-16");
   paymentType: string = 'Cash'; // default selected
    // Billing form
   itemName = '';
@@ -43,11 +45,22 @@ export class Tab1Page implements OnInit {
     await this.requestBluetoothPermissions();
   }
 
+//below function is temporary for lock the app
+checkExpiry(): boolean {
+  const today = new Date();
 
+  // remove time part (only compare date)
+  today.setHours(0, 0, 0, 0);
+  this.expiryDate.setHours(0, 0, 0, 0);
 
-    /* ----------------------
-     Permissions helpers
-     ---------------------- */
+  if (today > this.expiryDate) {
+    alert("This app has been expired. Please contact to office:- 9370239743.");
+    return false;
+  }
+  return true;
+}
+
+  
   async requestBluetoothPermissions() {
     try {
       // AndroidPermissions plugin uses constants under .PERMISSION
@@ -134,38 +147,12 @@ toggleConnection(device: any) {
 
 
 
-  // connect(device: any) {
-  //   // Use device.address (MAC) — sometimes device.id is also present
-  //   const addr = device.address || device.id;
-  //   this.selectedDevice = device;
-  //   // connect() returns an Observable; subscribe to get connect/disconnect events
-  //   this.bluetoothSerial.connect(addr).subscribe(
-  //     () => this.statusMessage = 'Connected to ' + (device.name || addr),
-  //     err => this.statusMessage = 'Connection failed or disconnected: ' + JSON.stringify(err)
-  //   );
-  // }
-
-  // disconnect() {
-  //   this.bluetoothSerial.disconnect();
-  //   this.selectedDevice = null;
-  //   this.statusMessage = 'Disconnected';
-  // }
-
-  /* ----------------------
-     Billing helpers
-     ---------------------- */
-  // addItem() {
-  //   if (!this.itemName || !this.quantity || !this.price) {
-  //     alert('Please fill item, qty, price');
-  //     return;
-  //   }
-  //   this.items.push({ name: this.itemName, qty: this.quantity, price: this.price });
-  //   this.itemName = '';
-  //   this.quantity = null;
-  //   this.price = null;
-  // }
 
   addItem() {
+ //here we are checking for expiry date
+    if (!this.checkExpiry()) {
+    return; // stop execution if expired
+  }
   if (!this.itemName || !this.quantity || !this.price) {
     alert('Please fill item, qty, price');
     return;
@@ -189,8 +176,6 @@ toggleConnection(device: any) {
 increaseQty(index: number) {
   this.items[index].qty++;
 }
-
-
 
 decreaseQty(index: number) {
   if (this.items[index].qty > 1) {
@@ -227,70 +212,6 @@ decreaseQty(index: number) {
     const totalStr = total.toString().padStart(7, ' ');
     return `${nm}${qtyStr}${priceStr}${totalStr}`;
   }
-
-
-//  async printReceipt() {
-//     if (!this.selectedDevice) {
-//       this.statusMessage = 'Select and connect a printer first!';
-//       return;
-//     }
-//     if (!this.items || this.items.length === 0) {
-//       this.statusMessage = 'Add at least one item to print';
-//       return;
-//     }
-
-//     // ESC/POS variables
-//     const ESC = '\x1B';
-//     const GS = '\x1D';
-
-//     let grandTotal = 0;
-//     let receipt = '';
-
-//     // Header: center title
-//     receipt += ESC + 'a' + String.fromCharCode(1); // center
-//     receipt += ESC + '\x45' + String.fromCharCode(1); // bold on (ESC E 1)
-//     receipt += '*** My Hotel & Bakery ***\n';
-//     receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
-//     receipt += ESC + 'a' + String.fromCharCode(0); // left
-
-//     receipt += `Date: ${new Date().toLocaleString()}\n`;
-//     receipt += '--------------------------------\n';
-//     receipt += 'Item            QTY  PRICE  TOTAL\n';
-//     receipt += '--------------------------------\n';
-
-//     this.items.forEach(i => {
-//       const total = i.qty * i.price;
-//       grandTotal += total;
-//       receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
-//     });
-
-//     receipt += '--------------------------------\n';
-
-//     // Grand total: center/right + bold + double size (note: double size may vary by model)
-//     receipt += ESC + 'a' + String.fromCharCode(2); // right align (or 1=center)
-//     receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
-//     // double size (GS ! n) - optional: many printers support GS ! 0x11
-//     receipt += GS + '!' + '\x11';
-//     receipt += `Grand Total: Rs${grandTotal}\n`;
-//     // reset size and bold
-//     receipt += GS + '!' + '\x00';
-//     receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
-//     receipt += ESC + 'a' + String.fromCharCode(0); // left align
-
-//     receipt += '\nThank you! Visit Again!\n\n\n';
-
-//     // Try feed and cut (printer dependent) - if the model supports cut
-//     receipt += GS + 'V' + '\x00'; // common cut command (may work or be ignored)
-
-//     // Convert to ArrayBuffer & send
-//     const buf = this.strToArrayBuffer(receipt);
-//     try {
-//       await this.bluetoothSerial.write(buf);
-//       this.statusMessage = 'Receipt sent to printer';
-//     } catch (err) {
-//       this.statusMessage = 'Print failed: ' + JSON.stringify(err);
-//     }
-//   }
 
 async printReceipt() {
   if (!this.selectedDevice) {
