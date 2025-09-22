@@ -1,29 +1,14 @@
- <!-- <ion-item>
-    <ion-label>Item</ion-label>
-    <ion-select [(ngModel)]="selectedItem">
-     <ion-select-option *ngFor="let item of items" [value]="item">
-  {{ item.itemname }} - {{ item.price | currency:'INR' }}
-</ion-select-option>
 
-    </ion-select>
-  </ion-item>
 
-  <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+<!-- <ion-content class="ion-padding">
 
- <div *ngIf="selectedItem" class="ion-margin-top">
-  <p><strong>Selected:</strong> {{ selectedItem.itemname }}</p>
-  <p><strong>Price:</strong> {{ selectedItem.price | currency:'INR' }}</p>
-</div> -->
-
-<ion-content class="ion-padding">
-
-  <!-- Search Input -->
+  
   <ion-item>
     <ion-label position="stacked">Item</ion-label>
     <ion-input [(ngModel)]="searchText" (ionInput)="onSearchChange($event)" placeholder="Type item name"></ion-input>
   </ion-item>
 
-  <!-- Dropdown list -->
+ 
   <ion-list *ngIf="showDropdown">
     <ion-item button *ngFor="let item of filteredItems" (click)="selectItem(item)">
       {{ item.itemname }} - {{ item.price | currency:'INR' }}
@@ -32,10 +17,221 @@
 
   <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
 
-  <!-- Display selected item -->
+  
   <div *ngIf="selectedItem" class="ion-margin-top">
     <p><strong>Selected:</strong> {{ selectedItem.itemname }}</p>
     <p><strong>Price:</strong> {{ selectedItem.price | currency:'INR' }}</p>
   </div>
 
-</ion-content>
+</ion-content> -->
+
+
+<!-- <ion-card>
+  <ion-card-header>
+    <ion-card-title>Add item</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+
+ 
+    <ion-item>
+      <ion-label position="stacked">Item</ion-label>
+      <ion-input [(ngModel)]="searchText" (ionInput)="onSearchChange($event)" placeholder="Type item name"></ion-input>
+    </ion-item>
+
+ 
+    <ion-list *ngIf="showDropdown">
+      <ion-item button *ngFor="let item of filteredItems" (click)="selectItem(item)">
+        {{ item.itemname }} - {{ item.price | currency:'INR' }}
+      </ion-item>
+    </ion-list>
+
+   
+    <ion-item *ngIf="selectedItem">
+      <ion-label position="floating">Quantity</ion-label>
+      <ion-input type="number" [(ngModel)]="quantity" name="quantity"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" color="success" (click)="addItem()" *ngIf="selectedItem">
+      Add to bill
+    </ion-button>
+  </ion-card-content>
+</ion-card>
+
+
+<ion-card *ngIf="items.length > 0">
+  <ion-card-header>
+    <ion-card-title>Current Bill</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row class="table-header">
+        <ion-col size="4"><b>Item</b></ion-col>
+        <ion-col size="3" class="ion-text-center"><b>Qty</b></ion-col>
+        <ion-col size="2" class="ion-text-center"><b>Price</b></ion-col>
+        <ion-col size="2" class="ion-text-center"><b>Total</b></ion-col>
+        <ion-col size="1"></ion-col>
+      </ion-row>
+
+      <ion-row *ngFor="let it of items; let i = index" class="table-row">
+        <ion-col size="4">{{ it.name }}</ion-col>
+        <ion-col size="3" class="ion-text-center">
+          <ion-button size="small" fill="outline" (click)="decreaseQty(i)">-</ion-button>
+          <span class="qty">{{ it.qty }}</span>
+          <ion-button size="small" fill="outline" (click)="increaseQty(i)">+</ion-button>
+        </ion-col>
+        <ion-col size="2" class="ion-text-center">{{ it.price }}</ion-col>
+        <ion-col size="2" class="ion-text-center">{{ it.qty * it.price }}</ion-col>
+        <ion-col size="1" class="ion-text-center">
+          <ion-button size="small" fill="clear" color="danger" (click)="removeItem(i)">✕</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="table-footer">
+        <ion-col size="6" class="ion-text-end"><b>Grand Total:</b></ion-col>
+        <ion-col size="6" class="ion-text-center"><b>{{ grandTotal }}</b></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card> -->
+
+
+
+
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Add item</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+
+    <!-- Item Search -->
+    <ion-item>
+      <ion-label position="floating">Item name</ion-label>
+      <ion-input [(ngModel)]="searchText" (ionInput)="onSearchChange($event)"></ion-input>
+    </ion-item>
+
+    <!-- Dropdown -->
+    <ion-list *ngIf="showDropdown">
+      <ion-item button *ngFor="let item of filteredItems" (click)="selectItem(item)">
+        {{ item.itemname }} - {{ item.price | currency:'INR' }}
+      </ion-item>
+    </ion-list>
+
+    <!-- Quantity -->
+    <ion-item>
+      <ion-label position="floating">Quantity</ion-label>
+      <ion-input type="number" [(ngModel)]="quantity"></ion-input>
+    </ion-item>
+
+    <!-- Price (auto-filled, editable) -->
+    <ion-item>
+      <ion-label position="floating">Price</ion-label>
+      <ion-input type="number" [(ngModel)]="price"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" color="success" (click)="addItem()">Add to bill</ion-button>
+  </ion-card-content>
+</ion-card>
+
+
+
+<ion-card *ngIf="items.length > 0">
+  <ion-card-header>
+    <ion-card-title>Current Bill</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+
+    <!-- Make table horizontally scrollable -->
+    <div class="bill-table">
+      <ion-grid>
+        <ion-row class="table-header">
+          <ion-col size="4"><b>Item</b></ion-col>
+          <ion-col size="3" class="ion-text-center"><b>Qty</b></ion-col>
+          <ion-col size="2" class="ion-text-center"><b>Price</b></ion-col>
+          <ion-col size="2" class="ion-text-center"><b>Total</b></ion-col>
+          <ion-col size="1"></ion-col>
+        </ion-row>
+
+        <ion-row *ngFor="let it of items; let i = index" class="table-row">
+          <ion-col size="4" class="truncate">{{ it.name }}</ion-col>
+
+          <ion-col size="3" class="ion-text-center">
+            <ion-button size="small" fill="outline" shape="round" (click)="decreaseQty(i)">-</ion-button>
+            <span class="qty">{{ it.qty }}</span>
+            <ion-button size="small" fill="outline" shape="round" (click)="increaseQty(i)">+</ion-button>
+          </ion-col>
+
+          <ion-col size="2" class="ion-text-center">{{ it.price }}</ion-col>
+          <ion-col size="2" class="ion-text-center">{{ it.qty * it.price }}</ion-col>
+
+          <ion-col size="1" class="ion-text-center">
+            <ion-button size="small" fill="clear" color="danger" (click)="removeItem(i)">
+              ✕
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="table-footer">
+          <ion-col size="2" class="ion-text-center"><b>Grand Total:</b></ion-col>
+          <ion-col size="6" class="ion-text-center"><b>{{ grandTotal }}</b></ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+<!-- Payment type selection -->
+
+ <ion-item lines="none" class="payment-type-row">
+  <ion-label position="stacked" class="payment-label">Payment</ion-label>
+  <ion-segment [(ngModel)]="paymentType" value="Cash" class="payment-segment">
+    <ion-segment-button value="Cash">
+      <ion-label>Cash</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="Online">
+      <ion-label>Online</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-item>
+
+
+    <ion-button expand="full" color="primary" (click)="printReceipt()">
+      Print Receipt
+    </ion-button>
+  </ion-card-content>
+</ion-card>
+
+
+<!-- Bill Table -->
+<!-- <ion-card *ngIf="items.length > 0">
+  <ion-card-header>
+    <ion-card-title>Current Bill</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row class="table-header">
+        <ion-col size="4"><b>Item</b></ion-col>
+        <ion-col size="3" class="ion-text-center"><b>Qty</b></ion-col>
+        <ion-col size="2" class="ion-text-center"><b>Price</b></ion-col>
+        <ion-col size="2" class="ion-text-center"><b>Total</b></ion-col>
+        <ion-col size="1"></ion-col>
+      </ion-row>
+
+      <ion-row *ngFor="let it of items; let i = index">
+        <ion-col size="4">{{ it.name }}</ion-col>
+        <ion-col size="3" class="ion-text-center">
+          <ion-button size="small" fill="outline" (click)="decreaseQty(i)">-</ion-button>
+          <span>{{ it.qty }}</span>
+          <ion-button size="small" fill="outline" (click)="increaseQty(i)">+</ion-button>
+        </ion-col>
+        <ion-col size="2" class="ion-text-center">{{ it.price }}</ion-col>
+        <ion-col size="2" class="ion-text-center">{{ it.qty * it.price }}</ion-col>
+        <ion-col size="1" class="ion-text-center">
+          <ion-button size="small" fill="clear" color="danger" (click)="removeItem(i)">✕</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="table-footer">
+        <ion-col size="6" class="ion-text-end"><b>Grand Total:</b></ion-col>
+        <ion-col size="6" class="ion-text-center"><b>{{ grandTotal }}</b></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card> -->

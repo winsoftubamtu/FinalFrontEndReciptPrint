@@ -157,7 +157,7 @@ toggleConnection(device: any) {
     alert('Please fill item, qty, price');
     return;
   }
-
+  
   // Check if item already exists
   const existing = this.items.find(it => it.name.toLowerCase() === this.itemName.toLowerCase());
 
