@@ -15,7 +15,7 @@ export interface Item {
   providedIn: 'root'
 })
 export class ItemService {
-  private apiUrl = 'https://localhost:7089/api/Items'; // ✅ your endpoint
+  private apiUrl = 'http://192.168.10.20:7089/api/Items'; // ✅ your endpoint
 
   constructor(private http: HttpClient) {}
 

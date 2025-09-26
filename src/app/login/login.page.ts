@@ -63,6 +63,15 @@ username = '';
 
         const token = await this.storageService.get('authToken');
         console.log('🔐 Token stored:', token);
+         // Save token
+    await this.storageService.set('authToken', response.token);
+
+    // Save storeName
+    await this.storageService.set('storeName', response.storeName);
+
+    console.log('🔐 Token stored:', response.token);
+    console.log('🏪 StoreName stored:', response.storeName);
+        
 
        // this.router.navigateByUrl('/tabs/tab1', { replaceUrl: true }); // ✅ redirect to tab1
        this.router.navigate(['/tabs', 'tab1'], { replaceUrl: true });

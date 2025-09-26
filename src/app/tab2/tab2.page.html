@@ -20,8 +20,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Printer controls -->
+<!-- <ion-content>
+
   <ion-card>
     <ion-card-header>
       <ion-card-title>Printer</ion-card-title>
@@ -44,5 +44,33 @@
       <p><small>{{ statusMessage }}</small></p>
     </ion-card-content>
   </ion-card>
-</ion-content>
+</ion-content> -->
 
+<ion-content class="ion-padding">
+ <ion-card>
+    <ion-card-header>
+      <ion-card-title>Printer</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="full" (click)="enableBluetooth()">Enable Bluetooth</ion-button>
+      <ion-button expand="full" (click)="listDevices()">List Paired Devices</ion-button>
+
+      <ion-list *ngIf="devices.length > 0">
+        <ion-item *ngFor="let d of devices">
+          <ion-label>
+            <h3>{{ d.name || 'Unknown' }}</h3>
+            <p>{{ d.address || d.id }}</p>
+          </ion-label>
+          <!-- <ion-button slot="end" (click)="connect(d)">Connect</ion-button> -->
+           <ion-button slot="end" (click)="toggleConnection(d)">
+  {{ selectedDevice?.address === d.address ? 'Disconnect' : 'Connect' }}
+</ion-button>
+
+        </ion-item>
+      </ion-list>
+
+      <p *ngIf="selectedDevice"><strong>Connected to:</strong> {{ selectedDevice.name || selectedDevice.address }}</p>
+      <p><small>{{ statusMessage }}</small></p>
+    </ion-card-content>
+  </ion-card>
+  </ion-content>

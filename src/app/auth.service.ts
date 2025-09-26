@@ -12,7 +12,7 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-   private apiUrl = 'https://localhost:7089/api/Auth/login'; // ✅ your API
+   private apiUrl = 'http://192.168.10.20:7089/api/Auth/login'; // ✅ your API
    
    constructor(
     private http: HttpClient,
