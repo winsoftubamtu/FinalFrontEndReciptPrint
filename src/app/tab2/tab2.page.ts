@@ -1,29 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonItem, IonLabel, IonList, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, IonTitle, IonToolbar, LoadingController, ToastController } from '@ionic/angular/standalone';
 import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { PrinterService } from '../printer-service';
-
+import { Purchase, PurchaseService } from '../purchase-service';
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [IonContent, IonButton, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonCard,IonCardHeader,IonCardTitle,IonCardContent,IonList,IonItem,IonLabel, ExploreContainerComponent],
+  standalone:true,
+   imports: [
+    CommonModule, FormsModule,
+    IonContent, IonHeader, IonToolbar, IonTitle,
+    IonCard, IonCardHeader, IonCardTitle, IonCardContent,
+    IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonButton,IonList
+  ],
+  //imports: [IonContent, IonButton, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonCard,IonCardHeader,IonCardTitle,IonCardContent,IonList,IonItem,IonLabel, ExploreContainerComponent],
    providers: [BluetoothSerial, AndroidPermissions]
 })
 export class Tab2Page implements OnInit {
+  purchase: Purchase = {
+    itemName: '',
+    quantity: '',
+    priceAtPurchase: 0,
+    paymentMethod: ''
+  };
+ purchases: Purchase[] = []; // List of added items
 devices: any[] = [];
  //selectedDevice: any = null;
+ showDevices: boolean = false; 
  selectedDevice = this.printerService.selectedDevice;
   statusMessage = '';
   constructor(
      private bluetoothSerial: BluetoothSerial,
     private androidPermissions: AndroidPermissions,
-    private printerService: PrinterService
+    private printerService: PrinterService,
+     private purchaseService: PurchaseService,
+      private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController
   ) { 
     this.checkBluetoothEnabled();
   }
@@ -75,11 +93,15 @@ devices: any[] = [];
   }
 
   listDevices() {
+     this.showDevices = !this.showDevices;
+     
+      if (this.showDevices) {
     this.bluetoothSerial.list().then((allDevices) => {
       this.devices = allDevices;
     }).catch(err => {
       this.statusMessage = 'Error listing devices: ' + err;
     });
+  }
   }
 
   // connect(device: any) {
@@ -116,5 +138,69 @@ toggleConnection(device: any) {
     );
   }
 }
-  
+
+addToList() {
+    if (!this.purchase.itemName?.trim() ||
+        !this.purchase.quantity?.trim() ||
+        this.purchase.priceAtPurchase <= 0 ||
+        !this.purchase.paymentMethod) {
+      this.showToast('Please fill all fields');
+      return;
+    }
+
+    // Push item to list
+    this.purchases.push({ ...this.purchase });
+    this.resetForm();
+    this.showToast('Item added to list ✅');
+  }
+
+  async saveAll() {
+    if (this.purchases.length === 0) {
+      this.showToast('No items to save');
+      return;
+    }
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Saving all purchases...',
+      spinner: 'crescent'
+    });
+    await loading.present();
+
+    let successCount = 0;
+
+    for (const item of this.purchases) {
+      try {
+        await this.purchaseService.addPurchase(item).toPromise();
+        successCount++;
+      } catch {
+        // Continue even if one fails
+      }
+    }
+
+    await loading.dismiss();
+    this.showToast(`Saved ${successCount} / ${this.purchases.length} items`);
+    this.purchases = [];
+  }
+
+  resetForm() {
+    this.purchase = {
+      itemName: '',
+      quantity: '',
+      priceAtPurchase: 0,
+      paymentMethod: ''
+    };
+  }
+
+  async showToast(message: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  onPriceInput(event: any) {
+    this.purchase.priceAtPurchase = +event.target.value;
+  }
 }

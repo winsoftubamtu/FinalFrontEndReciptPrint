@@ -6,13 +6,16 @@ import { StorageService } from './storage.service';
 export interface AuthResponse {
   token: string; // ✅ your API only returns token
   storeName: string;
+  passwordhash:string;
+  address:string;
+  expirydate:string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-   private apiUrl = 'http://192.168.10.20:7089/api/Auth/login'; // ✅ your API
+   private apiUrl = 'http://103.102.144.180:2003/api/Auth/login'; // ✅ your API
    
    constructor(
     private http: HttpClient,
@@ -31,6 +34,7 @@ export class AuthService {
         if (response && response.token) {
           await this.storageService.set('authToken', response.token);
           await this.storageService.set('user', response);
+         
         }
 
       })

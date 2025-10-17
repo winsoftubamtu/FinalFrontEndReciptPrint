@@ -35,7 +35,7 @@ export interface TransactionGet {
   providedIn: 'root'
 })
 export class TransactionService {
-  private apiUrl = 'http://192.168.10.20:7089/api/Transactions'; // backend endpoint
+  private apiUrl = 'http://103.102.144.180:2003/api/Transactions'; // backend endpoint
 
   constructor(private http: HttpClient) {}
 

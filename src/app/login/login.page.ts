@@ -69,8 +69,15 @@ username = '';
     // Save storeName
     await this.storageService.set('storeName', response.storeName);
 
+    await this.storageService.set('Passwordhash',response.passwordhash);
+
+     await this.storageService.set('Address',response.address);
+      await this.storageService.set('Expirydate',response.expirydate);
+
     console.log('🔐 Token stored:', response.token);
     console.log('🏪 StoreName stored:', response.storeName);
+    console.log('pass', response.passwordhash);
+     console.log('add', response.passwordhash, response.expirydate);
         
 
        // this.router.navigateByUrl('/tabs/tab1', { replaceUrl: true }); // ✅ redirect to tab1

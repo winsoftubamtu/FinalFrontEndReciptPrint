@@ -15,12 +15,15 @@ export interface Item {
   providedIn: 'root'
 })
 export class ItemService {
-  private apiUrl = 'http://192.168.10.20:7089/api/Items'; // ✅ your endpoint
+  private apiUrl = 'http://103.102.144.180:2003/api/Items'; // ✅ your endpoint
+
 
   constructor(private http: HttpClient) {}
 
   getItems(): Observable<Item[]> {
     return this.http.get<Item[]>(this.apiUrl);
   }
+
+  
   
 }

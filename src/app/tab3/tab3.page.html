@@ -229,12 +229,24 @@
   </ion-card-content>
 </ion-card>  -->
 
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Billing & Print</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
+
+<ion-segment>
+  <ion-segment-button value="first" content-id="first">
+    <ion-label>Sell</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="second" content-id="second">
+    <ion-label>Purchase</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<ion-segment-view>
+  <ion-segment-content id="first">
 <ion-content class="ion-padding">
 
   <!-- Simple Date Picker -->
@@ -317,6 +329,9 @@
       <tbody>
         <tr *ngFor="let txn of transactions" style="border-bottom: 1px solid #ccc;">
           <td style="padding:8px;">{{ txn.createdAt | date:'shortDate' }}</td>
+          <!-- <td style="padding:8px;"><ul style="margin:0; padding-left: 15px;">
+              <li *ngFor="let item of txn.items">{{ item.quantity }}</li>
+            </ul></td> -->
            <td style="padding:8px;">
             <ul style="margin:0; padding-left: 15px;">
               <li *ngFor="let item of txn.items">{{ item.itemName }}</li>
@@ -344,4 +359,120 @@
     <ion-label>No transactions found</ion-label>
   </ion-item>
 </ion-content>
+</ion-segment-content>
+
+ <ion-segment-content id="second">
+  <ion-content class="ion-padding">
+
+  <!-- Simple Date Picker -->
+  <ion-item>
+    <ion-label position="stacked">From Date</ion-label>
+    <ion-input type="date" [(ngModel)]="fromDate"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">To Date</ion-label>
+    <ion-input type="date" [(ngModel)]="toDate"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" (click)="loadpurchasebydate()">
+    Load purchase by Date
+  </ion-button>
+
+  <ion-button expand="block" color="medium" (click)="loadallpurchase()">
+    Load All Transactions
+  </ion-button>
+
+  <!-- Summary Cards -->
+<ion-grid>
+  <ion-row>
+    <!-- Cash Transactions -->
+    <ion-col size="6">
+      <ion-card color="success">
+        <ion-card-header>
+          <ion-card-title>Total Cash</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <h2 style="font-weight:bold; font-size:1.4em;">₹{{ getPCashtotal() }}</h2>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+
+    <!-- Online Transactions -->
+    <ion-col size="6">
+      <ion-card color="tertiary">
+        <ion-card-header>
+          <ion-card-title>Total Online</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <h2 style="font-weight:bold; font-size:1.4em;">₹{{ getPCOnlinetotaltotal() }}</h2>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+  <!-- Transactions List -->
+  <!-- <ion-list>
+    <ion-item *ngFor="let txn of transactions">
+      <ion-label>
+        <h2>{{ txn.createdAt | date:'medium' }} - {{ txn.paymentMethod }}</h2>
+        <p>Total: ₹{{ txn.totalAmount }}</p>
+        <ul>
+          <li *ngFor="let item of txn.items">
+            {{ item.itemName }} (x{{ item.quantity }}) - ₹{{ item.priceAtSale }}
+          </li>
+        </ul>
+      </ion-label>
+    </ion-item>
+  </ion-list> -->
+ <!-- Table Header -->
+  <!-- Table with horizontal scroll -->
+  <div style="overflow-x:auto; margin-top:15px;" *ngIf="transactions.length > 0">
+    <table style="width:100%; border-collapse: collapse; text-align: left;">
+      <thead>
+        <tr style="border-bottom: 2px solid #1976d2; background-color: #e0e0e0;">
+          <th style="padding:8px; min-width:80px;">Date</th>
+          <th style="padding:8px; min-width:120px;">Item Name</th>
+          <!-- <th style="padding:8px; min-width:60px;">Qty</th>
+          <th style="padding:8px; min-width:80px;">Total Items</th> -->
+          <th style="padding:8px; min-width:100px;">Payment</th>
+          <th style="padding:8px; min-width:100px;">Amount (₹)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let txn of purchase" style="border-bottom: 1px solid #ccc;">
+          <td style="padding:8px;">{{ txn.purchasedate | date:'shortDate' }}</td>
+           <td style="padding:8px;">{{txn.itemName}}
+            <!-- <ul style="margin:0; padding-left: 15px;"> -->
+              <!-- <li *ngFor="let item of txn.items">{{ item.itemName }}</li> -->
+            <!-- </ul> -->
+          </td>
+         <!-- <td style="padding:8px;">
+            <ul style="margin:0; padding-left: 15px;">
+              <li *ngFor="let item of txn.items">{{ item.quantity }}</li>
+            </ul>
+          </td>
+          <td style="padding:8px;">{{ txn.items.length }}</td> -->
+          <td style="padding:8px;">{{ txn.paymentMethod }}</td>
+          <td style="padding:8px;">{{ txn.priceAtPurchase }}</td>
+        </tr>
+        <!-- Total Row -->
+        <tr style="font-weight:bold; background-color:#f0f0f0;">
+          <td colspan="2" style="padding:8px; text-align:left;">Total Amount:</td>
+          <td colspan="2" style="padding:8px; text-align:left;">₹{{ getPtotalamount() }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ion-item *ngIf="transactions.length === 0">
+    <ion-label>No transactions found</ion-label>
+  </ion-item>
+</ion-content>
+ </ion-segment-content>
+</ion-segment-view>
+
+
 

@@ -196,12 +196,16 @@ import {
   IonTitle,
   IonToolbar,
   IonDatetime,
+  IonSegment,
+  IonSegmentContent,
+  IonSegmentView,
 
   
 } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { Item, ItemService } from '../item-service';
 import { Transaction, TransactionGet, TransactionService } from '../TransactionService ';
+import { PurchaseBydate, PurchaseService } from '../purchase-service';
 
 
 
@@ -209,26 +213,36 @@ import { Transaction, TransactionGet, TransactionService } from '../TransactionS
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonDatetime,IonTitle,IonToolbar,IonHeader, IonSegmentButton, IonCardContent, IonGrid, IonCard, IonCardHeader, IonCardTitle, IonRow, IonCol,IonButton, IonInput,
+  imports: [IonSegment,IonSegmentButton, IonSegmentContent, IonSegmentView,IonDatetime,IonTitle,IonToolbar,IonHeader, IonSegmentButton, IonCardContent, IonGrid, IonCard, IonCardHeader, IonCardTitle, IonRow, IonCol,IonButton, IonInput,
   IonList,
   IonItemOption,CommonModule, FormsModule, IonContent, IonItem, IonLabel, IonSelect, IonSelectOption, IonSpinner, ExploreContainerComponent],
 })
 export class Tab3Page implements OnInit  {
   transactions: TransactionGet[] = [];
-
+  purchase:PurchaseBydate[]=[];
   fromDate: string = '';   // ISO string yyyy-MM-dd
   toDate: string = '';
 
-   constructor(private transactionService: TransactionService) {}
+   constructor(private transactionService: TransactionService,
+    private purchaseService:PurchaseService
+   ) {}
 
   ngOnInit() {
     this.loadAllTransactions(); // load all initially
+    this.loadallpurchase();
   }
 
   loadAllTransactions() {
     this.transactionService.getAllTransactions().subscribe({
       next: (data) => this.transactions = data,
       error: (err) => console.error('Error fetching transactions', err)
+    });
+  }
+
+  loadallpurchase(){
+    this.purchaseService.getPurchases().subscribe({
+      next:(data)=>this.purchase=data,
+      error:(err)=>console.error('error cant load')
     });
   }
 
@@ -243,9 +257,24 @@ export class Tab3Page implements OnInit  {
     });
   }
 
+  loadpurchasebydate(){
+    if (!this.fromDate || !this.toDate) {
+      console.warn('Please select both dates');
+      return;
+    }
+    this.purchaseService.getpurchasebydate(this.fromDate,this.toDate).subscribe({
+      next:(data)=>this.purchase=data,
+        error: (err) => console.error('Error fetching transactions by date', err)
+    });
+  }
+
 
   getTotalAmount(): number {
     return this.transactions.reduce((sum, txn) => sum + txn.totalAmount, 0);
+  }
+
+  getPtotalamount():number{
+    return this.purchase.reduce((sum,txn)=>sum+txn.priceAtPurchase,0);
   }
 
   getCashTotal(): number {
@@ -254,10 +283,21 @@ export class Tab3Page implements OnInit  {
     .reduce((sum, txn) => sum + txn.totalAmount, 0);
 }
 
+getPCashtotal():number{
+  return this.purchase
+  .filter(txn=>txn.paymentMethod==='Cash'|| txn.paymentMethod==='cash')
+  .reduce((sum,txn)=>sum + txn.priceAtPurchase,0);
+}
+
 getOnlineTotal(): number {
   return this.transactions
     .filter(txn => txn.paymentMethod === 'Online' || txn.paymentMethod === 'online')
     .reduce((sum, txn) => sum + txn.totalAmount, 0);
+}
+getPCOnlinetotaltotal():number{
+  return this.purchase
+  .filter(txn=>txn.paymentMethod==='Online'|| txn.paymentMethod==='online')
+  .reduce((sum,txn)=>sum + txn.priceAtPurchase,0);
 }
 
 }
