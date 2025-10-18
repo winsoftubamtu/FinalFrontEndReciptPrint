@@ -183,4 +183,13 @@ ion-segment-button {
   border-radius: 0; /* pill effect handled by parent */
 }
 
+.item-btn {
+  --background: #1976d2;
+  --color: white;
+  font-weight: 600;
+  height: 70px;
+  text-transform: uppercase;
+  box-shadow: 0 3px 10px rgba(25, 118, 210, 0.3);
+}
+
 

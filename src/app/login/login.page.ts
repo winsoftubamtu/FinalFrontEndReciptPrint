@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
   AlertController,
   IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent,
-  IonIcon, IonInput, IonItem, IonLabel, IonSpinner
+  IonIcon, IonInput, IonInputPasswordToggle, IonItem, IonLabel, IonSpinner
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { logInOutline, personCircleOutline, lockClosedOutline } from 'ionicons/icons';
@@ -17,7 +17,7 @@ import { StorageService } from '../storage.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-   imports: [
+   imports: [IonInputPasswordToggle ,
     CommonModule, FormsModule,
     IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent,
     IonIcon, IonInput, IonItem, IonLabel, IonSpinner
@@ -27,6 +27,8 @@ export class LoginPage implements OnInit {
 username = '';
   password = '';
   isLoading = false;
+  showPassword = false;
+
 
   constructor(
     private router: Router,
@@ -97,5 +99,10 @@ username = '';
       }
     });
   }
+
+  togglePasswordVisibility() {
+  this.showPassword = !this.showPassword;
+}
+
 
 }

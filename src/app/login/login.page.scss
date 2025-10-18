@@ -1,0 +1,231 @@
+// .login-page {
+//   --background: linear-gradient(to bottom right, #1976d2, #64b5f6);
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+//   padding: 20px;
+//   height: 100%;
+// }
+
+// .logo-section {
+//   text-align: center;
+//   margin-top: 40px;
+// }
+
+// .app-logo {
+//   width: 90px;
+//   height: 90px;
+//   border-radius: 50%;
+//   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+// }
+
+// .app-title {
+//   color: #ffffff;
+//   margin-top: 10px;
+//   font-size: 1.6rem;
+//   font-weight: 600;
+// }
+
+// .login-card {
+//   width: 100%;
+//   max-width: 360px;
+//   background: #ffffff;
+//   border-radius: 16px;
+//   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+//   padding: 20px;
+//  // margin-top: 30px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   //height: 100%;
+//   position: fixed;
+// }
+
+// .custom-item {
+//   --background: transparent;
+//   --color: #333;
+//   border: 1px solid #e0e0e0;
+//   border-radius: 10px;
+//   margin-bottom: 15px;
+//   padding: 4px 0;
+// }
+
+// .custom-item ion-icon {
+//   color: #1976d2;
+// }
+
+// .eye-icon {
+//   color: #1976d2;
+//   cursor: pointer;
+// }
+
+// ion-input {
+//   color: #333;
+//   font-size: 1rem;
+// }
+
+// .login-btn {
+//   margin-top: 10px;
+//   --background: linear-gradient(to right, #1976d2, #42a5f5);
+//   font-weight: bold;
+//   border-radius: 10px;
+//   color: white;
+//   box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+// }
+
+// .login-btn:hover {
+//   transform: scale(1.03);
+// }
+
+// .extra-links {
+//   text-align: center;
+//   margin-top: 12px;
+// }
+
+// .extra-links a {
+//   color: #1976d2;
+//   text-decoration: none;
+//   font-size: 0.9rem;
+// }
+
+// .extra-links a:hover {
+//   text-decoration: underline;
+// }
+
+
+
+.login-page {
+  --background: none;
+  background: linear-gradient(135deg, #b6c1ff, #2861d3);
+  position: relative;
+  height: 100%;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/assets/images/hotel-luxury-bg.jpg') no-repeat center center/cover;
+  opacity: 0.25;
+  filter: blur(3px);
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: fixed;
+}
+
+.login-card {
+  width: 90%;
+  max-width: 380px;
+  background: rgba(211, 191, 191, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.425);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  color: #fff;
+  padding: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  animation: fadeInUp 0.7s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.logo-icon {
+  font-size: 3.5rem;
+  color: #4fc3f7;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px rgba(79, 195, 247, 0.7);
+}
+
+ion-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  text-shadow: 0 0 10px rgba(16, 35, 44, 0.37);
+}
+
+ion-card-subtitle {
+  color: #b0bec5;
+  font-size: 0.9rem;
+}
+
+.custom-item {
+  --background: rgba(255, 255, 255, 0.719);
+  --highlight-color-focused: #000000;
+  margin-top: 18px;
+  border-radius: 10px;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.custom-item:focus-within {
+  box-shadow: 0 0 12px rgba(79, 195, 247, 0.5);
+}
+
+.custom-item ion-icon {
+  color: #4fc3f7;
+  font-size: 1.3rem;
+}
+
+ion-input {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.eye-icon {
+  color: #4fc3f7;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.login-btn {
+  margin-top: 25px;
+  --background: linear-gradient(135deg, #4fc3f7, #0288d1);
+  color: #fff;
+  font-weight: bold;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(79, 195, 247, 0.4);
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(79, 195, 247, 0.6);
+}
+
+.extra-links {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.extra-links a {
+  color: #4fc3f7;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+.extra-links a:hover {
+  text-decoration: underline;
+}
+

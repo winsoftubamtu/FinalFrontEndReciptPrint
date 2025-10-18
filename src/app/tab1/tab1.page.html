@@ -289,9 +289,10 @@
           <ion-row>
             <ion-col size="6" *ngFor="let item of filteredItems" style="margin-bottom: 10px;">
               <ion-button
+                class="item-btn "
                 expand="block"
                 fill="solid"
-                [color]="selectedItemId === item.itemid ? 'success' : 'tertiary'"
+                [color]="selectedItemId === item.itemid ? 'success' : 'primary'"
                 style="height: 70px; white-space: normal;"
                 (click)="selectItem(item)">
                 {{ item.itemname }} <br />

@@ -1047,67 +1047,130 @@ increaseQty(index: number) {
     return `${nm}${qtyStr}${priceStr}${totalStr}`;
   }
 
+// async printReceipt() {
+//     const bill = this.tables[this.currentTable];
+//     //await this.showPopup("⚡ Info", "printReceipt function triggered");
+//    if (!this.printerService.selectedDevice) {
+//       await this.showPopup("🚨 Error", "Select and connect a printer first!");
+//       return;
+//     }
+//    if (!bill.items || bill.items.length === 0) {
+//       await this.showPopup("🚨 Error", "No items found to print!");
+//       return;
+//     }
+
+//   const ESC = '\x1B';
+//   const GS = '\x1D';
+
+//   let grandTotal = 0;
+//   let receipt = '';
+
+//   // Header
+//   receipt += ESC + 'a' + String.fromCharCode(1); // center
+//   receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
+//   receipt += this.storeName;
+//   receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
+//   receipt += ESC + 'a' + String.fromCharCode(0); // left
+
+//   receipt += `Date: ${new Date().toLocaleString()}\n`;
+//   receipt += `Payment: ${this.paymentType}\n`;   // ✅ Added here
+//   receipt += '--------------------------------\n';
+
+//   receipt += '--------------------------------\n';
+//   receipt += 'Item           QTY  PRICE  TOTAL\n';
+//   receipt += '--------------------------------\n';
+
+//   bill.items.forEach((i: { qty: number; price: number; name: string; }) => {
+//       const total = i.qty * i.price;
+//       grandTotal += total;
+//       receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
+//     });
+
+
+//   receipt += '--------------------------------\n';
+
+//   // Grand total (normal size, bold only)
+//   receipt += ESC + 'a' + String.fromCharCode(2); // right align
+//   receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
+//   receipt += `Grand Total: Rs ${grandTotal}\n`;
+//   receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
+//   receipt += ESC + 'a' + String.fromCharCode(0); // left align
+
+//   receipt += '\nThank you! Visit Again!\n\n\n';
+
+//   // Feed & cut
+//   receipt += GS + 'V' + '\x00';
+
+//   const buf = this.strToArrayBuffer(receipt);
+//  try {
+//       await this.bluetoothSerial.write(buf);
+//       await this.showPopup("✅ Success", "Receipt sent to printer");
+//     } catch (err) {
+//       await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
+//     }
+// }
+
+
 async printReceipt() {
-    const bill = this.tables[this.currentTable];
-    //await this.showPopup("⚡ Info", "printReceipt function triggered");
-   if (!this.printerService.selectedDevice) {
-      await this.showPopup("🚨 Error", "Select and connect a printer first!");
-      return;
-    }
-   if (!bill.items || bill.items.length === 0) {
-      await this.showPopup("🚨 Error", "No items found to print!");
-      return;
-    }
+  const bill = this.tables[this.currentTable];
+
+  if (!this.printerService.selectedDevice) {
+    await this.showPopup("🚨 Error", "Select and connect a printer first!");
+    return;
+  }
+  if (!bill.items || bill.items.length === 0) {
+    await this.showPopup("🚨 Error", "No items found to print!");
+    return;
+  }
 
   const ESC = '\x1B';
   const GS = '\x1D';
-
   let grandTotal = 0;
   let receipt = '';
 
-  // Header
-  receipt += ESC + 'a' + String.fromCharCode(1); // center
-  receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
-  receipt += this.storeName;
-  receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
-  receipt += ESC + 'a' + String.fromCharCode(0); // left
-
+  // 🏪 --- HEADER ---
+  receipt += ESC + 'a' + String.fromCharCode(1); // center align
+  receipt += ESC + '!' + String.fromCharCode(0x38); // double height & width + bold
+  receipt += this.storeName + '\n';
+  receipt+='\n';
+  receipt += ESC + '!' + String.fromCharCode(0); // normal text
   receipt += `Date: ${new Date().toLocaleString()}\n`;
-  receipt += `Payment: ${this.paymentType}\n`;   // ✅ Added here
+ // receipt += `Payment: ${this.paymentType}\n`;
   receipt += '--------------------------------\n';
 
-  receipt += '--------------------------------\n';
+  // 🧾 --- TABLE HEADER ---
   receipt += 'Item           QTY  PRICE  TOTAL\n';
   receipt += '--------------------------------\n';
 
+  // 🧮 --- ITEMS LOOP ---
   bill.items.forEach((i: { qty: number; price: number; name: string; }) => {
-      const total = i.qty * i.price;
-      grandTotal += total;
-      receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
-    });
-
+    const total = i.qty * i.price;
+    grandTotal += total;
+    receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
+  });
 
   receipt += '--------------------------------\n';
 
-  // Grand total (normal size, bold only)
+  // 💰 --- GRAND TOTAL ---
   receipt += ESC + 'a' + String.fromCharCode(2); // right align
-  receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
-  receipt += `Grand Total: Rs ${grandTotal}\n`;
-  receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
-  receipt += ESC + 'a' + String.fromCharCode(0); // left align
+  receipt += ESC + '!' + String.fromCharCode(0x20); // double height, bold
+  receipt += `Total:  ${grandTotal}Rs \n`;
+  receipt += ESC + '!' + String.fromCharCode(0); // reset to normal
+  receipt += ESC + 'a' + String.fromCharCode(1); // center align
 
+  // 🙏 --- FOOTER ---
   receipt += '\nThank you! Visit Again!\n\n\n';
 
-  // Feed & cut
+  // ✂️ --- CUT PAPER ---
   receipt += GS + 'V' + '\x00';
 
   const buf = this.strToArrayBuffer(receipt);
- try {
-      await this.bluetoothSerial.write(buf);
-      await this.showPopup("✅ Success", "Receipt sent to printer");
-    } catch (err) {
-      await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
-    }
+  try {
+    await this.bluetoothSerial.write(buf);
+    await this.showPopup("✅ Success", "Receipt sent to printer");
+  } catch (err) {
+    await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
+  }
 }
 
 

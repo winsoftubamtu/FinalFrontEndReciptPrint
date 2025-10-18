@@ -206,6 +206,7 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
 import { Item, ItemService } from '../item-service';
 import { Transaction, TransactionGet, TransactionService } from '../TransactionService ';
 import { PurchaseBydate, PurchaseService } from '../purchase-service';
+import { StorageService } from '../storage.service';
 
 
 
@@ -222,12 +223,15 @@ export class Tab3Page implements OnInit  {
   purchase:PurchaseBydate[]=[];
   fromDate: string = '';   // ISO string yyyy-MM-dd
   toDate: string = '';
+  storeName: string = '';
 
    constructor(private transactionService: TransactionService,
-    private purchaseService:PurchaseService
+    private purchaseService:PurchaseService,
+    private storageService: StorageService
    ) {}
 
-  ngOnInit() {
+ async ngOnInit() {
+     this.storeName = await this.storageService.get('storeName');
     this.loadAllTransactions(); // load all initially
     this.loadallpurchase();
   }

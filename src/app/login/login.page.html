@@ -1,4 +1,4 @@
-<ion-content class="ion-padding">
+<!-- <ion-content class="ion-padding">
   <div class="login-container">
     <ion-card>
       <ion-card-header>
@@ -31,4 +31,68 @@
       </ion-card-content>
     </ion-card>
   </div>
+</ion-content> -->
+
+<ion-content class="login-page">
+
+
+  <!-- Login Card -->
+ <div class="login-container">
+    <ion-card class="login-card">
+      <ion-card-header class="card-header">
+        <ion-icon name="bed-outline" class="logo-icon"></ion-icon>
+        <ion-card-title>hey! Welcome</ion-card-title>
+        <ion-card-subtitle>Sign in to your account</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form (ngSubmit)="login()" #loginForm="ngForm">
+          
+          <!-- Username -->
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="person-circle-outline" slot="start" style="color:black;"></ion-icon>
+            <ion-input
+              style="color: black;"
+              [(ngModel)]="username"
+              name="username"
+              placeholder="Username"
+              type="text"
+              required
+              >
+            </ion-input>
+          </ion-item>
+
+          <!-- Password with eye icon -->
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start" style="color: black"></ion-icon>
+            <ion-input
+            style="color: black;"
+            type="password"
+              [(ngModel)]="password"
+              name="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Password"
+              required>
+              <ion-input-password-toggle slot="end" style="color: black"></ion-input-password-toggle>
+            </ion-input>
+          </ion-item>
+
+          <!-- Login Button -->
+          <ion-button
+            expand="block"
+            type="submit"
+            class="login-btn"
+            [disabled]="!loginForm.valid || isLoading">
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+            <ng-container *ngIf="!isLoading">Login</ng-container>
+          </ion-button>
+
+          <div class="extra-links">
+            <a href="#">Forgot Password?</a>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
 </ion-content>
