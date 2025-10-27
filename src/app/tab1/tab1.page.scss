@@ -192,4 +192,21 @@ ion-segment-button {
   box-shadow: 0 3px 10px rgba(25, 118, 210, 0.3);
 }
 
+ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+ion-card {
+  margin: 4px; /* smaller margin */
+  width: 100%;
+  box-shadow: none;
+  border-radius: 8px;
+}
+
+ion-card-content {
+  padding: 8px;
+}
 

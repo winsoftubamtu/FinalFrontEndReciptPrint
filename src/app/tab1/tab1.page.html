@@ -247,7 +247,7 @@
 
 
 <!-- ****************************BELOW IS HOSTED SEPRATE BILL TABLE -->
- <ion-content class="ion-padding">
+<ion-content class="ion-padding">
 
   <!-- ===== Table Selector ===== -->
   <ion-card class="tables-card" style="margin-bottom: 15px; padding: 10px;">
@@ -258,142 +258,127 @@
     </ion-segment>
   </ion-card>
 
-  <!-- ===== Menu / Bill Toggle ===== -->
-  <ion-card class="tab-toggle-card" style="margin-bottom: 15px; padding: 10px;">
-    <ion-segment [(ngModel)]="activeTab" value="menu">
-      <ion-segment-button value="menu">
-        <ion-label>Menu</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="bill">
-        <ion-label>Bill</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-card>
+  <!-- ===== SPLIT LAYOUT ===== -->
+  <ion-grid>
+    <ion-row>
+      <!-- ===== MENU SECTION ===== -->
+      <ion-col size="12" size-md="6">
+        <ion-card style="margin-bottom: 15px;">
+          <ion-card-header>
+            <ion-card-title>Select Item</ion-card-title>
+          </ion-card-header>
 
-  <!-- ===== MENU TAB ===== -->
-  <ng-container *ngIf="activeTab === 'menu'">
-    <ion-card style="margin-bottom: 15px;">
-      <ion-card-header>
-        <ion-card-title>Select Item</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
+          <ion-card-content>
 
-        <!-- Search Bar -->
-        <ion-item style="margin-bottom: 10px;">
-          <ion-label position="floating">Search Item</ion-label>
-          <ion-input [(ngModel)]="searchText" (ionInput)="onSearchChange($event)"></ion-input>
-        </ion-item>
+            <!-- Search Bar -->
+            <ion-item style="margin-bottom: 10px;">
+              <ion-label position="floating">Search Item</ion-label>
+              <ion-input [(ngModel)]="searchText" (ionInput)="onSearchChange($event)"></ion-input>
+            </ion-item>
 
-        <!-- Item Grid (Tap to Add) -->
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6" *ngFor="let item of filteredItems" style="margin-bottom: 10px;">
-              <ion-button
-                class="item-btn "
-                expand="block"
-                fill="solid"
-                [color]="selectedItemId === item.itemid ? 'success' : 'primary'"
-                style="height: 70px; white-space: normal;"
-                (click)="selectItem(item)">
-                {{ item.itemname }} <br />
-                <small>{{ item.price | currency:'INR' }}</small>
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+            <!-- Item Grid (Tap to Add) -->
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6" *ngFor="let item of filteredItems" style="margin-bottom: 10px;">
+                  <ion-button
+                    class="item-btn"
+                    expand="block"
+                    fill="solid"
+                    [color]="selectedItemId === item.itemid ? 'success' : 'primary'"
+                    (click)="selectItem(item)">
+                    {{ item.itemname }} <br />
+                    <small>{{ item.price | currency:'INR' }}</small>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
 
-      </ion-card-content>
-    </ion-card>
-  </ng-container>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
 
-  <!-- ===== BILL TAB ===== -->
-  <ng-container *ngIf="activeTab === 'bill'">
-    <ion-card *ngIf="tables[currentTable].items.length > 0" style="margin-bottom: 15px;">
-      <ion-card-header>
-        <ion-card-title>Current Bill (Table {{ currentTable }})</ion-card-title>
-      </ion-card-header>
-      <ion-card-content style="padding: 10px;">
+      <!-- ===== BILL SECTION ===== -->
+      <ion-col size="12" size-md="6">
+        <ion-card *ngIf="tables[currentTable].items.length > 0" style="margin-bottom: 15px;">
+          <ion-card-header>
+            <ion-card-title>Current Bill (Table {{ currentTable }})</ion-card-title>
+          </ion-card-header>
+          <ion-card-content style="padding: 10px;">
 
-        <!-- Bill Table -->
-        <div class="bill-table">
-          <ion-grid>
-            <!-- Header -->
-            <ion-row class="table-header" style="margin-bottom: 5px;">
-              <ion-col size="4"><b>Item</b></ion-col>
-              <ion-col size="3" class="ion-text-center"><b>Qty</b></ion-col>
-              <ion-col size="2" class="ion-text-center"><b>Price</b></ion-col>
-              <ion-col size="2" class="ion-text-center"><b>Total</b></ion-col>
-              <ion-col size="1"></ion-col>
-            </ion-row>
+            <!-- Bill Table -->
+            <div class="bill-table">
+              <ion-grid>
+                <!-- Header -->
+                <ion-row class="table-header" style="margin-bottom: 5px;">
+                  <ion-col size="4"><b>Item</b></ion-col>
+                  <ion-col size="3" class="ion-text-center"><b>Qty</b></ion-col>
+                  <ion-col size="2" class="ion-text-center"><b>Price</b></ion-col>
+                  <ion-col size="2" class="ion-text-center"><b>Total</b></ion-col>
+                  <ion-col size="1"></ion-col>
+                </ion-row>
 
-            <!-- Items -->
-            <ion-row *ngFor="let it of tables[currentTable].items; let i = index" class="table-row" style="margin-bottom: 5px;">
-              <ion-col size="4" class="truncate">{{ it.name }}</ion-col>
+                <!-- Items -->
+                <ion-row *ngFor="let it of tables[currentTable].items; let i = index" class="table-row">
+                  <ion-col size="4" class="truncate">{{ it.name }}</ion-col>
 
-              <ion-col size="3" class="ion-text-center">
-                <ion-button size="small" fill="solid" shape="round" color="secondary" (click)="decreaseQty(i)">-</ion-button>
-                <span class="qty" style="margin: 0 5px;">{{ it.qty }}</span>
-                <ion-button size="small" fill="solid" shape="round" color="secondary" (click)="increaseQty(i)">+</ion-button>
-              </ion-col>
+                  <ion-col size="3" class="ion-text-center">
+                    <ion-button size="small" fill="solid" shape="round" color="secondary" (click)="decreaseQty(i)">-</ion-button>
+                    <span class="qty">{{ it.qty }}</span>
+                    <ion-button size="small" fill="solid" shape="round" color="secondary" (click)="increaseQty(i)">+</ion-button>
+                  </ion-col>
 
-              <ion-col size="2" class="ion-text-center">{{ it.price }}</ion-col>
-              <ion-col size="2" class="ion-text-center">{{ it.qty * it.price }}</ion-col>
+                  <ion-col size="2" class="ion-text-center">{{ it.price }}</ion-col>
+                  <ion-col size="2" class="ion-text-center">{{ it.qty * it.price }}</ion-col>
 
-              <ion-col size="1" class="ion-text-center">
-                <ion-button size="small" fill="clear" color="danger" (click)="removeItem(i)">
-                  ✕
-                </ion-button>
-              </ion-col>
-            </ion-row>
+                  <ion-col size="1" class="ion-text-center">
+                    <ion-button size="small" fill="clear" color="danger" (click)="removeItem(i)">✕</ion-button>
+                  </ion-col>
+                </ion-row>
 
-            <!-- Footer -->
-            <ion-row class="table-footer" style="margin-top: 10px;">
-              <ion-col size="4" class="ion-text-right"><b>Grand Total:</b></ion-col>
-              <ion-col size="8" class="ion-text-left"><b>{{ grandTotal }}</b></ion-col>
-            </ion-row>
-          </ion-grid>
-        </div>
+                <!-- Footer -->
+                <ion-row class="table-footer" style="margin-top: 10px;">
+                  <ion-col size="4" class="ion-text-right"><b>Grand Total:</b></ion-col>
+                  <ion-col size="8" class="ion-text-left"><b>{{ grandTotal }}</b></ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
 
-        <!-- Payment type selection -->
-        <ion-item lines="none" class="payment-type-row" style="margin-top: 15px;">
-          <ion-label position="stacked" class="payment-label">Payment</ion-label>
-          <ion-segment [(ngModel)]="tables[currentTable].paymentType" value="Cash" class="payment-segment">
-            <ion-segment-button value="Cash">
-              <ion-label>Cash</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="Online">
-              <ion-label>Online</ion-label>
-            </ion-segment-button>
-          </ion-segment>
-        </ion-item>
+            <!-- Payment type selection -->
+            <ion-item lines="none" class="payment-type-row" style="margin-top: 15px;">
+              <ion-label position="stacked" class="payment-label">Payment</ion-label>
+              <ion-segment [(ngModel)]="tables[currentTable].paymentType" value="Cash" class="payment-segment">
+                <ion-segment-button value="Cash"><ion-label>Cash</ion-label></ion-segment-button>
+                <ion-segment-button value="Online"><ion-label>Online</ion-label></ion-segment-button>
+              </ion-segment>
+            </ion-item>
 
-        <!-- Print Option -->
-        <ion-item lines="none" style="margin-top: 10px;">
-          <ion-label>Print Receipt?</ion-label>
-          <ion-checkbox slot="start" [(ngModel)]="tables[currentTable].shouldPrint"></ion-checkbox>
-        </ion-item>
+            <!-- Print Option -->
+            <ion-item lines="none" style="margin-top: 10px;">
+              <ion-label>Print Receipt?</ion-label>
+              <ion-checkbox slot="start" [(ngModel)]="tables[currentTable].shouldPrint"></ion-checkbox>
+            </ion-item>
 
-        <!-- Action Buttons -->
-        <ion-button expand="full" color="primary" style="margin-top: 10px;" (click)="saveTransaction()">
-          Save Transaction
-        </ion-button>
+            <!-- Action Buttons -->
+            <ion-button expand="full" color="primary" style="margin-top: 10px;" (click)="saveTransaction()">
+              Save Transaction
+            </ion-button>
 
-        <ion-button expand="full" color="primary" style="margin-top: 10px;" (click)="printReceipt()">
-          Print Transaction
-        </ion-button>
+            <ion-button expand="full" color="success" style="margin-top: 10px;" (click)="printReceipt()">
+              <ion-icon name="print-outline" slot="start"></ion-icon>
+              Print Transaction
+            </ion-button>
 
-      </ion-card-content>
-    </ion-card>
+          </ion-card-content>
+        </ion-card>
 
-    <!-- Empty Bill -->
-    <ion-card *ngIf="tables[currentTable].items.length === 0" style="margin-top: 15px;">
-      <ion-card-content>
-        No items added yet for Table {{ currentTable }}.
-      </ion-card-content>
-    </ion-card>
-
-  </ng-container>
-
+        <!-- Empty Bill -->
+        <ion-card *ngIf="tables[currentTable].items.length === 0">
+          <ion-card-content>No items added yet for Table {{ currentTable }}.</ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
 
 

@@ -704,7 +704,7 @@
 
 //******************************************below is hosted code++++++++++++++++++++ */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -752,7 +752,8 @@ import { PrinterService } from '../printer-service';
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonButton, IonItem, IonList, IonLabel, IonInput, IonTextarea,
     IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonRadio,IonSegment, IonSegmentButton, ExploreContainerComponent],
-    providers: [BluetoothSerial, AndroidPermissions]
+    providers: [BluetoothSerial, AndroidPermissions],
+     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class Tab1Page implements OnInit {
    activeTab: string = 'menu'; 
@@ -827,10 +828,15 @@ tablesArray: number[] = [];
 
   onSearchChange(event: any) {
     const val = event.target.value.toLowerCase();
+    if(val&& val.trim() !== ''){
     this.showDropdown = val.length > 0;
     this.filteredItems = this.allItems.filter(i =>
       i.itemname.toLowerCase().includes(val)
     );
+  }else{
+    this.showDropdown = false;
+    this.filteredItems = this.allItems;
+  }
   }
 
   selectItem(item: Item) {
