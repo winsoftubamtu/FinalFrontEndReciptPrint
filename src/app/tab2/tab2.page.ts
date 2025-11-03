@@ -8,6 +8,14 @@ import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { PrinterService } from '../printer-service';
 import { Purchase, PurchaseService } from '../purchase-service';
+import { Http } from '@capacitor-community/http';
+
+//import { HttpClient } from '@angular/common/http';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { FileTransfer, FileTransferObject } from '@awesome-cordova-plugins/file-transfer/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
+
+import { App } from '@capacitor/app';
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -20,9 +28,14 @@ import { Purchase, PurchaseService } from '../purchase-service';
     IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonButton,IonList
   ],
   //imports: [IonContent, IonButton, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,IonCard,IonCardHeader,IonCardTitle,IonCardContent,IonList,IonItem,IonLabel, ExploreContainerComponent],
-   providers: [BluetoothSerial, AndroidPermissions]
+   providers: [BluetoothSerial, AndroidPermissions,File, FileTransfer, FileOpener]
 })
 export class Tab2Page implements OnInit {
+    updateUrl = 'http://103.102.144.180:8897/app/update.json';
+  currentVersion = '1.0.1'; // same as version in your app.json or config
+  newVersionAvailable = false;
+  latestApkUrl: string = '';
+
   purchase: Purchase = {
     itemName: '',
     quantity: '',
@@ -41,7 +54,12 @@ devices: any[] = [];
     private printerService: PrinterService,
      private purchaseService: PurchaseService,
       private loadingCtrl: LoadingController,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+
+    // private http: HttpClient,
+    private file: File,
+    private transfer: FileTransfer,
+    private fileOpener: FileOpener
   ) { 
     this.checkBluetoothEnabled();
   }
@@ -203,4 +221,136 @@ addToList() {
   onPriceInput(event: any) {
     this.purchase.priceAtPurchase = +event.target.value;
   }
+
+
+  // checkForUpdate() {
+  //   this.http.get<any>(this.updateUrl).subscribe(data => {
+  //     if (data.versionName !== this.currentVersion) {
+  //       this.newVersionAvailable = true;
+  //       this.latestApkUrl = data.apkUrl;
+  //       alert('New version ' + data.versionName + ' available!');
+  //     } else {
+  //       alert('Your app is up to date.');
+  //     }
+  //   });
+  // }
+
+ async checkForUpdate() {
+  try {
+    const response = await Http.get({
+      url: this.updateUrl,
+      params: {},       // 👈 must not be null
+      headers: {}       // 👈 must not be null
+    });
+
+    const data = response.data;
+
+    if (data.versionName !== this.currentVersion) {
+      this.newVersionAvailable = true;
+      this.latestApkUrl = data.apkUrl;
+      alert('New version ' + data.versionName + ' available!');
+    } else {
+      alert('Your app is up to date.');
+    }
+  } catch (error) {
+    console.error('Error checking for update:', error);
+    alert('Error checking for update: ' + JSON.stringify(error));
+  }
+}
+
+
+
+
+  //  downloadAndInstall() {
+  //   const fileTransfer: FileTransferObject = this.transfer.create();
+  //   const filePath = this.file.externalDataDirectory + 'app-latest.apk';
+  //   fileTransfer.download(this.latestApkUrl, filePath).then(entry => {
+  //     this.fileOpener.open(entry.toURL(), 'application/vnd.android.package-archive');
+  //   }, error => {
+  //     alert('Download failed: ' + JSON.stringify(error));
+  //   });
+  // }
+
+async requestStoragePermission() {
+  const permissions = [
+    this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE,
+    this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
+  ];
+
+  try {
+    const result = await this.androidPermissions.requestPermissions(permissions);
+    console.log('Permission result:', result);
+  } catch (error) {
+    alert('Permission request failed: ' + JSON.stringify(error));
+  }
+}
+
+
+
+// async downloadAndInstall() {
+//   try {
+//     // Step 1: Ensure permissions
+//     await this.requestStoragePermission();
+
+//     alert('📥 Starting download...');
+
+//     const fileTransfer: FileTransferObject = this.transfer.create();
+//     const filePath = this.file.externalRootDirectory + 'Download/app-latest.apk';
+
+//     alert('Downloading from: ' + this.latestApkUrl);
+
+//     const entry = await fileTransfer.download(this.latestApkUrl, filePath, true);
+
+//     alert('✅ Download complete! File saved at:\n' + entry.toURL());
+
+//     try {
+//       alert('📦 Opening APK for installation...');
+//       await this.fileOpener.open(entry.toURL(), 'application/vnd.android.package-archive');
+//       alert('✅ Installation started.');
+//     } catch (openError) {
+//       alert('❌ Failed to open APK: ' + JSON.stringify(openError));
+//     }
+
+//   } catch (error) {
+//     alert('❌ Download failed: ' + JSON.stringify(error));
+//   }
+// }
+
+
+
+async downloadAndInstall() {
+  try {
+    await this.requestStoragePermission();
+
+    alert('📥 Starting APK download...');
+
+    const fileTransfer: FileTransferObject = this.transfer.create();
+    const filePath = this.file.dataDirectory + 'app-latest.apk';
+    alert('Downloading to: ' + filePath);
+
+    const entry = await fileTransfer.download(this.latestApkUrl, filePath, true);
+
+    // Use nativeURL — not toURL()
+    const apkPath = entry.nativeURL;
+
+    alert('✅ Download complete!\n\nPath to open:\n' + apkPath);
+
+    try {
+      await this.fileOpener.open(apkPath, 'application/vnd.android.package-archive');
+      alert('✅ Installation started successfully!');
+    } catch (openError) {
+      alert('❌ Failed to open APK using nativeURL:\n' + JSON.stringify(openError));
+      console.error('FileOpener open error:', openError);
+    }
+
+  } catch (error) {
+    alert('❌ Download failed:\n' + JSON.stringify(error));
+    console.error('Download error:', error);
+  }
+}
+
+
+
+
+
 }

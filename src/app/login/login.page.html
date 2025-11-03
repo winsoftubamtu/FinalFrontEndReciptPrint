@@ -33,10 +33,10 @@
   </div>
 </ion-content> -->
 
-<ion-content class="login-page">
+<!-- <ion-content class="login-page">
 
 
-  <!-- Login Card -->
+ 
  <div class="login-container">
     <ion-card class="login-card">
       <ion-card-header class="card-header">
@@ -48,7 +48,7 @@
       <ion-card-content>
         <form (ngSubmit)="login()" #loginForm="ngForm">
           
-          <!-- Username -->
+         
           <ion-item class="custom-item" lines="none">
             <ion-icon name="person-circle-outline" slot="start" style="color:black;"></ion-icon>
             <ion-input
@@ -62,7 +62,7 @@
             </ion-input>
           </ion-item>
 
-          <!-- Password with eye icon -->
+          
           <ion-item class="custom-item" lines="none">
             <ion-icon name="lock-closed-outline" slot="start" style="color: black"></ion-icon>
             <ion-input
@@ -77,7 +77,7 @@
             </ion-input>
           </ion-item>
 
-          <!-- Login Button -->
+        
           <ion-button
             expand="block"
             type="submit"
@@ -93,6 +93,80 @@
         </form>
       </ion-card-content>
     </ion-card>
+  </div>
+
+</ion-content> -->
+
+
+<ion-content class="login-page">
+  <div class="login-wrapper">
+  <div class="login-box">
+    <div class="login-image"></div>
+
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <!-- Username -->
+      <!-- <div class="input-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Enter username"
+          required
+          [(ngModel)]="username"
+        />
+      </div> -->
+        <ion-item class="custom-item" lines="none">
+            <ion-icon name="person-circle-outline" slot="start" style="color:black;"></ion-icon>
+            <ion-input
+              style="color: black;"
+              [(ngModel)]="username"
+              name="username"
+              placeholder="Username"
+              type="text"
+              required
+              >
+            </ion-input>
+          </ion-item>
+
+      <!-- Password -->
+      <!-- <div class="input-group">
+        <label for="password">Password</label>
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          id="password"
+          name="password"
+          placeholder="Enter password"
+          required
+          [(ngModel)]="password"
+        />
+      </div> -->
+
+      <!-- Toggle Password -->
+    <ion-item class="custom-item" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start" style="color: black"></ion-icon>
+            <ion-input
+            style="color: black;"
+            type="password"
+              [(ngModel)]="password"
+              name="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Password"
+              required>
+              <ion-input-password-toggle slot="end" style="color: black"></ion-input-password-toggle>
+            </ion-input>
+          </ion-item>
+
+      <!-- Login Button -->
+      <button
+        type="submit"
+        class="btn"
+        [disabled]="!loginForm.valid || isLoading">
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        <ng-container *ngIf="!isLoading">Login</ng-container>
+      </button>
+    </form>
+  </div>
   </div>
 
 </ion-content>
