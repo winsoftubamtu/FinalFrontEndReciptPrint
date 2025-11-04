@@ -799,6 +799,8 @@ tablesArray: number[] = [];
     }
   }
    async ngOnInit() {
+   console.log(this.filteredItems)
+    
     this.fetchItems();
       this.storeName = await this.storageService.get('storeName');
         this.tablesArray = Array.from({ length: this.numberOfTables }, (_, i) => i + 1);

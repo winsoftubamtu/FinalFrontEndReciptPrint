@@ -98,24 +98,12 @@
 </ion-content> -->
 
 
-<ion-content class="login-page">
+<ion-content class="login-page" keyboardResize="none">
   <div class="login-wrapper">
   <div class="login-box">
     <div class="login-image"></div>
-
     <form (ngSubmit)="login()" #loginForm="ngForm">
       <!-- Username -->
-      <!-- <div class="input-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Enter username"
-          required
-          [(ngModel)]="username"
-        />
-      </div> -->
         <ion-item class="custom-item" lines="none">
             <ion-icon name="person-circle-outline" slot="start" style="color:black;"></ion-icon>
             <ion-input
@@ -130,17 +118,6 @@
           </ion-item>
 
       <!-- Password -->
-      <!-- <div class="input-group">
-        <label for="password">Password</label>
-        <input
-          [type]="showPassword ? 'text' : 'password'"
-          id="password"
-          name="password"
-          placeholder="Enter password"
-          required
-          [(ngModel)]="password"
-        />
-      </div> -->
 
       <!-- Toggle Password -->
     <ion-item class="custom-item" lines="none">

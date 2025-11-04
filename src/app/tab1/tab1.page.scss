@@ -286,19 +286,22 @@
 /* Header row */
 .table-header {
   font-weight: bold;
-  border-bottom: 2px solid #1976d2;
-  background-color: #e3f2fd;
+  border-bottom: 2px solid #450101ef;
+  background-color: #450101ef;
   position: sticky;
+  color: white;
   top: 0;
   z-index: 1;
 }
 
 .table-footer{
-   border-bottom: 2px solid #1976d2;
-  background-color: #e3f2fd;
+  font-weight: bold;
+  border-bottom: 2px solid #450101ef;
+  background-color: #450101ef;
+  color: white;
 }
 .table-row {
-  border-bottom: 1px dashed #e0e0e0;
+  border-bottom: 1.5px dashed #e0e0e0;
   align-items: center;
 }
 
@@ -327,7 +330,7 @@
 }
 
 .payment-segment {
- margin-top: 1em;
+ margin-top: 0em;
   width: 100%;
   border-radius: 12px;
   overflow: hidden;
@@ -335,10 +338,10 @@
 }
 
 ion-segment-button {
-  --color: #1976d2;            /* text when inactive */
+  --color: #560000;            /* text when inactive */
   --color-checked: #fff;       /* text when active */
-  --indicator-color: #1976d2;  /* underline */
-  --background-checked: #1976d2; /* active bg */
+  --indicator-color: #d21919;  /* underline */
+  --background-checked: #450101ef; /* active bg */
   font-size: 14px;
   font-weight: 500;
   border-radius: 0; /* pill effect handled by parent */
@@ -412,5 +415,13 @@ ion-button[size="small"] {
   --padding-start: 4px;
   --padding-end: 4px;
   --border-radius: 10%;
+}
+
+ion-button {
+  --background:#450101ef;
+  --background-activated: #a52a2a;
+  --background-hover: #a52a2a;
+  --color: #fff;
+  border-radius: 10px;
 }
 

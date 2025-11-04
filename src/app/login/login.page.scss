@@ -251,6 +251,9 @@
   align-items: center;
   height: 100%;
   padding: 20px;
+  background-color: #440101e7;
+  overflow: hidden;
+  position: fixed;
 }
 /* LOGIN BOX */
 .login-box {
@@ -266,7 +269,7 @@
 
 /* IMAGE HEADER */
 .login-image {
-  background: url('D:/ionic/finalionic/printbill/src/assets/ashirvad.jpeg') no-repeat center center;
+  background: url('src/assets/ashirvad.jpeg') no-repeat center center;
   background-size: cover;
   height: 160px;
   width: 100%;

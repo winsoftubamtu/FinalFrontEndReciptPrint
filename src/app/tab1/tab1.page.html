@@ -1,9 +1,10 @@
 
-<ion-header>
-  <ion-toolbar color="primary">
+<!-- <ion-header style="color: white;
+    background-color: #6b0202e7">
+  
     <ion-title>{{storeName}}</ion-title>
-  </ion-toolbar>
-</ion-header>
+ 
+</ion-header> -->
 
 <!-- <ion-content class="ion-padding">
 
@@ -390,8 +391,8 @@
   
   <ion-card class="tables-card" style="margin-bottom: 15px; padding: 10px;">
     <ion-segment [(ngModel)]="currentTable" scrollable="true">
-      <ion-segment-button *ngFor="let t of tablesArray" [value]="t" style="margin-right: 5px;">
-        <ion-label>Table {{ t }}</ion-label>
+      <ion-segment-button *ngFor="let t of tablesArray" [value]="t" style="margin-right: 5px; ">
+        <ion-label>टेबल {{ t }}</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-card>
@@ -413,8 +414,8 @@
           <ion-card-content>
 
           
-            <ion-item style="background-color: beige;">
-              <ion-label position="floating">Search Item</ion-label>
+            <ion-item>
+              <ion-label position="floating">पदार्थ शोधा</ion-label>
               <ion-input [(ngModel)]="searchText" (ionInput)="onSearchChange($event)"></ion-input>
             </ion-item>
 
@@ -426,7 +427,7 @@
                     class="item-btn"
                     expand="block"
                     fill="solid"
-                    [color]="selectedItemId === item.itemid ? 'success' : 'white'"
+                    [color]="selectedItemId === item.itemid ? 'danger' : 'brown'"
                     (click)="selectItem(item)">
                     {{ item.itemname }} <br />
                     <small>{{ item.price | currency:'INR' }}</small>
@@ -434,6 +435,38 @@
                 </ion-col>
               </ion-row>
             </ion-grid>
+
+            <!-- <ion-grid>
+  <ion-row>
+    <ion-col size="4" *ngFor="let item of filteredItems" style="margin-bottom: 10px;">
+      <ion-button
+        class="item-btn"
+        expand="block"
+        fill="solid"
+        [color]="selectedItemId === item.itemid ? 'success' : 'light'"
+        (click)="selectItem(item)">
+        
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+          
+          
+           <ion-img 
+            [src]="'assets/ashirvad.jpeg'" 
+            style="width: 80px; height: 60px; object-fit: cover; border-radius: 10px; margin-bottom: 0px;">
+          </ion-img>
+          
+         
+          <div style="text-align: center; line-height: 1.2;">
+            <strong>{{ item.itemname }}</strong><br>
+            <small>{{ item.price | currency:'INR' }}</small>
+          </div>
+
+        </div>
+
+      </ion-button>
+    </ion-col>
+  </ion-row>
+            </ion-grid> -->
+
 
           </ion-card-content>
         </ion-card>
@@ -454,10 +487,10 @@
 
             <!-- Bill Table -->
               <ion-row class="table-header" style="margin-bottom: 5px;">
-                  <ion-col size="4"><b>Item</b></ion-col>
-                  <ion-col size="3" class="ion-text-center"><b>Qty</b></ion-col>
-                  <ion-col size="2" class="ion-text-center"><b>Price</b></ion-col>
-                  <ion-col size="2" class="ion-text-center"><b>Total</b></ion-col>
+                  <ion-col size="4"><b>पदार्थ</b></ion-col>
+                  <ion-col size="3" class="ion-text-center"><b>प्रमाण</b></ion-col>
+                  <ion-col size="2" class="ion-text-center"><b>किंमत</b></ion-col>
+                  <ion-col size="2" class="ion-text-center"><b>एकूण</b></ion-col>
                   <ion-col size="1"></ion-col>
                 </ion-row>
             <div class="bill-table">
@@ -476,9 +509,9 @@
                   </ion-col> -->
 
                      <ion-col size="3" class="ion-text-center">
-                     <ion-button size="small" fill="solid"  color="secondary" (click)="decreaseQty(i)">-</ion-button>
+                     <ion-button size="small" fill="solid"  (click)="decreaseQty(i)">-</ion-button>
                       <span class="qty">{{ it.qty }}</span>
-                       <ion-button size="small" fill="solid"  color="secondary" (click)="increaseQty(i)">+</ion-button>
+                       <ion-button size="small" fill="solid" (click)="increaseQty(i)">+</ion-button>
                      </ion-col>
 
                   <ion-col size="2" class="ion-text-center">{{ it.price }}</ion-col>
@@ -495,7 +528,7 @@
              
             </div>
              <ion-row class="table-footer" style="margin-top: 10px;">
-                  <ion-col size="4" class="ion-text-right"><b>Grand Total:</b></ion-col>
+                  <ion-col size="4" class="ion-text-right"><b>एकूण रक्कम:</b></ion-col>
                   <ion-col size="8" class="ion-text-left"><b>{{ grandTotal }}</b></ion-col>
               </ion-row>
 
@@ -503,8 +536,8 @@
             <ion-item lines="none" class="payment-type-row" style="margin-top: 15px;">
               <ion-label position="stacked" class="payment-label">Payment</ion-label>
               <ion-segment [(ngModel)]="tables[currentTable].paymentType" value="Cash" class="payment-segment">
-                <ion-segment-button value="Cash"><ion-label>Cash</ion-label></ion-segment-button>
-                <ion-segment-button value="Online"><ion-label>Online</ion-label></ion-segment-button>
+                <ion-segment-button value="Cash"><ion-label>रोख</ion-label></ion-segment-button>
+                <ion-segment-button value="Online"><ion-label>ऑनलाईन</ion-label></ion-segment-button>
               </ion-segment>
             </ion-item>
 
@@ -515,8 +548,8 @@
             </ion-item> -->
 
             <!-- Action Buttons -->
-            <ion-button expand="full" color="primary" style="margin-top: 10px;" (click)="saveTransaction()">
-              Save Transaction
+            <ion-button expand="full" fill="solid"  style="margin-top: 10px; background-color: #450101ef;" (click)="saveTransaction()">
+             सेव करा
             </ion-button>
 
             <!-- <ion-button expand="full" color="success" style="margin-top: 10px;" (click)="printReceipt()">
@@ -529,7 +562,7 @@
 
         <!-- Empty Bill -->
         <ion-card *ngIf="tables[currentTable].items.length === 0">
-          <ion-card-content>No items added yet for Table {{ currentTable }}.</ion-card-content>
+          <ion-card-content> टेबलसाठी अजून आयटम अ‍ॅड केले नाहीत {{ currentTable }}.</ion-card-content>
         </ion-card>
       </ion-col>
 
