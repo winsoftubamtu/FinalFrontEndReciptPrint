@@ -232,8 +232,18 @@ export class Tab3Page implements OnInit  {
 
  async ngOnInit() {
      this.storeName = await this.storageService.get('storeName');
-    this.loadAllTransactions(); // load all initially
-    this.loadallpurchase();
+
+      const today = new Date();
+      const isoDate = today.toISOString().split('T')[0]; // format yyyy-MM-dd
+
+      this.fromDate = isoDate;
+      this.toDate = isoDate;
+
+
+         this.loadByDate();
+         this.loadpurchasebydate();
+    // this.loadAllTransactions(); // load all initially
+    // this.loadallpurchase();
   }
 
   loadAllTransactions() {

@@ -733,6 +733,8 @@ import {
   IonRadio,
   IonSegment,
   AlertController,
+  ToastController,
+  GestureController,
 
   
 } from '@ionic/angular/standalone';
@@ -757,7 +759,10 @@ import { PrinterService } from '../printer-service';
 })
 export class Tab1Page implements OnInit {
    activeTab: string = 'menu'; 
-     currentTable: number = 1;
+   private holdInterval: any;
+   holdDelay = 200; // speed of continuous increment/decrement
+   isHolding = false;
+   currentTable: number = 1;
        // ----- Multi-table bills -----
   tables: any = {};
   numberOfTables: number = 10;
@@ -790,7 +795,10 @@ tablesArray: number[] = [];
     private itemService: ItemService,
     private transactionService: TransactionService,
     private alertController: AlertController,
-    private printerService: PrinterService
+    private printerService: PrinterService,
+    private toastCtrl: ToastController,
+    private gestureCtrl: GestureController
+    
   ) {
     
     this.checkBluetoothEnabled();
@@ -1028,6 +1036,68 @@ increaseQty(index: number) {
     }
   }
 
+  startHold(index: number, action: 'increase' | 'decrease') {
+  this.isHolding = true;
+  this.performAction(index, action);
+
+  this.holdInterval = setInterval(() => {
+    this.performAction(index, action);
+  }, this.holdDelay);
+}
+
+stopHold() {
+  this.isHolding = false;
+  clearInterval(this.holdInterval);
+}
+singleClick(index: number, action: 'increase' | 'decrease') {
+  if (this.isHolding) return; // ignore if holding
+  this.performAction(index, action);
+}
+
+performAction(index: number, action: 'increase' | 'decrease') {
+  const bill = this.tables[this.currentTable];
+  const item = bill.items[index];
+
+  if (action === 'increase') {
+    item.qty++;
+  } else if (action === 'decrease') {
+    if (item.qty > 1) {
+      item.qty--;
+    } else {
+      bill.items.splice(index, 1);
+    }
+  }
+}
+
+onQtyChange(index: number) {
+  const bill = this.tables[this.currentTable];
+  const item = bill.items[index];
+  
+  if (item.qty < 1 || isNaN(item.qty)) {
+    item.qty = 1;
+  }
+}
+//   onQtyChange(index: number) {
+//   const bill = this.tables[this.currentTable];
+//   const qty = bill.items[index].qty;
+//   if (!qty || qty < 1) bill.items[index].qty = 1; // prevent invalid input
+// }
+
+/* ---------- Long press logic ---------- */
+startIncrement(index: number) {
+  this.increaseQty(index);
+  this.holdInterval = setInterval(() => this.increaseQty(index), 100);
+}
+
+startDecrement(index: number) {
+  this.decreaseQty(index);
+  this.holdInterval = setInterval(() => this.decreaseQty(index), 100);
+}
+
+// stopHold() {
+//   clearInterval(this.holdInterval);
+// }
+
   removeItem(idx: number) {
     this.tables[this.currentTable].items.splice(idx, 1);
   }
@@ -1119,17 +1189,22 @@ increaseQty(index: number) {
 // }
 
 
+
+
+
+
+// below is commented because no need of this 
 async printReceipt() {
   const bill = this.tables[this.currentTable];
 
-  if (!this.printerService.selectedDevice) {
-    await this.showPopup("🚨 Error", "Select and connect a printer first!");
-    return;
-  }
-  if (!bill.items || bill.items.length === 0) {
-    await this.showPopup("🚨 Error", "No items found to print!");
-    return;
-  }
+  // if (!this.printerService.selectedDevice) {
+  //   await this.showPopup("🚨 Error", "Select and connect a printer first!");
+  //   return;
+  // }
+  // if (!bill.items || bill.items.length === 0) {
+  //   await this.showPopup("🚨 Error", "No items found to print!");
+  //   return;
+  // }
 
   const ESC = '\x1B';
   const GS = '\x1D';
@@ -1173,12 +1248,12 @@ async printReceipt() {
   receipt += GS + 'V' + '\x00';
 
   const buf = this.strToArrayBuffer(receipt);
-  try {
-    await this.bluetoothSerial.write(buf);
-    await this.showPopup("✅ Success", "Receipt sent to printer");
-  } catch (err) {
-    await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
-  }
+  // try {
+  //   await this.bluetoothSerial.write(buf);
+  //  await this.showPopup("✅ Success", "Receipt sent to printer");
+  // } catch (err) {
+  //   await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
+  // }
 }
 
 
@@ -1188,6 +1263,15 @@ async printReceipt() {
     return bill.items.reduce((sum: number, it: any) => sum + it.qty * it.price, 0);
   }
 
+
+ async showToast(message: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 3000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
 
 async saveTransaction() {
    const bill = this.tables[this.currentTable];
@@ -1211,7 +1295,8 @@ async saveTransaction() {
   (await this.transactionService.saveTransaction(transaction))
     .subscribe({
       next:async  (res) => {
-        alert(`Transaction for Table ${this.currentTable} saved successfully`);
+         this.showToast('Saved Successfully ✅');
+       // alert(`Transaction for Table ${this.currentTable} saved successfully`);
        // console.log('✅ Transaction saved:', res);
         //alert('Transaction saved successfully');
           // Only print if checkbox is checked

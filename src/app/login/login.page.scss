@@ -269,9 +269,11 @@
 
 /* IMAGE HEADER */
 .login-image {
-  background: url('src/assets/ashirvad.jpeg') no-repeat center center;
+  //background: url('src/assets/ashirvad.jpeg') no-repeat center center;  //AAshirwad change
+  background: url('src/assets/Rc65.jpeg') no-repeat center center; //Rc chiken 
   background-size: cover;
-  height: 160px;
+  //height: 160px; // this suiatable for the AAshirvad hotel
+  height: 215px; //Rc chiken
   width: 100%;
 }
 

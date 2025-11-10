@@ -1,20 +1,113 @@
-ion-toolbar {
-  --background: #1976d2;
-  --color: white;
+// ion-toolbar {
+//   --background: #1976d2;
+//   --color: white;
+// }
+
+// .form-card {
+//   border-radius: 20px;
+//   box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+// }
+
+// ion-card-title {
+//   color: #1976d2;
+//   font-weight: 600;
+//   text-align: center;
+// }
+
+// ion-button {
+//   --border-radius: 12px;
+//   font-weight: 500;
+// }
+
+
+
+
+
+
+
+
+ion-content {
+  --background: #fdf8f1; /* soft beige backdrop */
 }
 
+/* Card styling */
 .form-card {
   border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.25); /* brown shadow */
+  background: #fffaf3;
+  margin-top: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 69, 19, 0.35);
+  }
 }
 
+/* Header title */
 ion-card-title {
-  color: #1976d2;
+  color: #8b4513; /* classic brown */
   font-weight: 600;
   text-align: center;
+  font-size: 1.2rem;
 }
 
+/* Buttons styling */
 ion-button {
   --border-radius: 12px;
   font-weight: 500;
+  margin-top: 10px;
+  --background: #450101ef; /* brown → golden gradient */
+  --color: #fff;
+  --box-shadow: 0 3px 8px rgba(139, 69, 19, 0.3);
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+/* Outline button */
+ion-button[fill="outline"] {
+  --border-color: #8b4513;
+  --color: #8b4513;
+  --border-radius: 12px;
+  border: 2px solid #8b4513;
+  background: transparent;
+  box-shadow: none;
+
+  &:hover {
+    --background: #f5deb3; /* light golden hover */
+    --color: #8b4513;
+  }
+}
+
+/* Device list items */
+ion-item {
+  border-radius: 12px;
+  margin: 6px 0;
+  --background: #fffdf6;
+  --color: #333;
+
+  ion-label h3 {
+    color: #8b4513;
+    font-weight: 600;
+  }
+
+  ion-label p {
+    color: #777;
+    font-size: 0.85rem;
+  }
+}
+
+/* Status text */
+.connected {
+  color: #8b4513;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+.status {
+  color: #555;
+  margin-top: 4px;
+  font-style: italic;
 }

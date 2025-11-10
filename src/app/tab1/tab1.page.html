@@ -385,7 +385,11 @@
 
 
 <!-- *******************************BELOW IS AASHIRWAD HOTEL CODE**************************** -->
-
+<ion-header>
+  <ion-toolbar style="--background: #450101ef; --color: white;">
+    <ion-title>{{storeName}}</ion-title>
+  </ion-toolbar>
+</ion-header>
 <ion-content class="ion-padding">
 
   
@@ -508,11 +512,53 @@
                     <ion-button size="small" fill="solid" shape="round" color="secondary" (click)="increaseQty(i)">+</ion-button>
                   </ion-col> -->
 
-                     <ion-col size="3" class="ion-text-center">
+
+
+
+ <ion-col size="3" class="ion-text-center qty-col">
+
+  <!-- Decrease button -->
+  <ion-button
+    size="small"
+    fill="solid"
+    
+    (click)="singleClick(i, 'decrease')"
+    (press)="startHold(i, 'decrease')"
+  >
+    -
+  </ion-button>
+
+  <!-- Editable quantity input -->
+  <ion-input
+    type="number"
+    min="1"
+    [(ngModel)]="tables[currentTable].items[i].qty"
+    (ionChange)="onQtyChange(i)"
+    class="qty-input"
+    inputmode="numeric"
+  ></ion-input>
+
+  <!-- Increase button -->
+  <ion-button
+    size="small"
+    fill="solid"
+    
+    (click)="singleClick(i, 'increase')"
+    (press)="startHold(i, 'increase')"
+  >
+    +
+  </ion-button>
+
+</ion-col>
+
+
+
+
+                     <!-- <ion-col size="3" class="ion-text-center">
                      <ion-button size="small" fill="solid"  (click)="decreaseQty(i)">-</ion-button>
                       <span class="qty">{{ it.qty }}</span>
                        <ion-button size="small" fill="solid" (click)="increaseQty(i)">+</ion-button>
-                     </ion-col>
+                     </ion-col> -->
 
                   <ion-col size="2" class="ion-text-center">{{ it.price }}</ion-col>
                   <ion-col size="2" class="ion-text-center">{{ it.qty * it.price }}</ion-col>
@@ -548,7 +594,7 @@
             </ion-item> -->
 
             <!-- Action Buttons -->
-            <ion-button expand="full" fill="solid"  style="margin-top: 10px; background-color: #450101ef;" (click)="saveTransaction()">
+            <ion-button expand="full" fill="solid"  style="margin-top: 30px; margin-bottom: 10px; background-color: #450101ef;" (click)="saveTransaction()">
              सेव करा
             </ion-button>
 
