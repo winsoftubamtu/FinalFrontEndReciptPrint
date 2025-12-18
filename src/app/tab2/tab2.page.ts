@@ -16,6 +16,7 @@ import { FileTransfer, FileTransferObject } from '@awesome-cordova-plugins/file-
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 import { App } from '@capacitor/app';
+import { StorageService } from '../storage.service';
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -35,7 +36,7 @@ export class Tab2Page implements OnInit {
   currentVersion = '1.0.1'; // same as version in your app.json or config
   newVersionAvailable = false;
   latestApkUrl: string = '';
-
+storeName: string = '';
   purchase: Purchase = {
     itemName: '',
     quantity: '',
@@ -55,7 +56,7 @@ devices: any[] = [];
      private purchaseService: PurchaseService,
       private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
-
+private storageService: StorageService,
     // private http: HttpClient,
     private file: File,
     private transfer: FileTransfer,
@@ -66,6 +67,7 @@ devices: any[] = [];
 
  async ngOnInit() {
     await this.requestBluetoothPermissions();
+     this.storeName = await this.storageService.get('storeName');
   }
 
   async requestBluetoothPermissions() {

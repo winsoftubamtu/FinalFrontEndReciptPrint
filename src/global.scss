@@ -34,4 +34,24 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+//@import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Force app to stay light always */
+html, body, ion-app, ion-content {
+  background: #ffffff !important;
+  --ion-background-color: #ffffff !important;
+  --ion-text-color: #000000 !important;
+  color-scheme: light !important;
+}
+
+/* Prevent Ionic components from auto-dark styling */
+ion-header,
+ion-toolbar,
+ion-item,
+ion-card,
+ion-list,
+ion-tab-bar,
+ion-tab-button {
+  --background: #ffffff !important;
+  --color: #450101ef !important;
+}

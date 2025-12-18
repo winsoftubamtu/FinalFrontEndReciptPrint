@@ -233,17 +233,160 @@
 
 
 // *************************************************************************************
+// below change is with image in login
+
+
+// .login-page {
+//   --background: #f2f2f5;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 100%;
+// }
+// /* Wrapper to center content */
+// .login-wrapper {
+//   width: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 100%;
+//   padding: 20px;
+//   background-color: #440101e7;
+//   overflow: hidden;
+//   position: fixed;
+// }
+// /* LOGIN BOX */
+// .login-box {
+//   background: linear-gradient(to bottom, #fff8e1, #f8e8c8);
+//   width: 350px;
+//   border-radius: 15px;
+//   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+//   overflow: hidden;
+//   border: 2px solid #c49a3a;
+//   padding-bottom: 20px;
+//   position: relative;
+// }
+
+// /* IMAGE HEADER */
+// .login-image {
+//   //background: url('src/assets/ashirvad.jpeg') no-repeat center center;  //AAshirwad change
+//   background: url('src/assets/Rc65.jpeg') no-repeat center center; //Rc chiken 
+//   background-size: cover;
+//   //height: 160px; // this suiatable for the AAshirvad hotel
+//   height: 215px; //Rc chiken
+//   width: 100%;
+// }
+
+// /* FORM */
+// form {
+//   padding: 0 30px 25px;
+// }
+
+// /* INPUTS */
+// .input-group {
+//   margin-bottom: 15px;
+//   text-align: left;
+// }
+
+// .input-group label {
+//   display: block;
+//   font-weight: bold;
+//   margin-bottom: 5px;
+//   color: #5a3c00;
+// }
+
+// .input-group input {
+//   width: 100%;
+//   padding: 10px;
+//   border: 1px solid #b8860b;
+//   border-radius: 8px;
+//   font-size: 14px;
+//   background-color: #fffaf0;
+//   outline: none;
+// }
+
+// .input-group input:focus {
+//   border-color: #c49a3a;
+//   box-shadow: 0 0 5px rgba(196, 154, 58, 0.8);
+// }
+
+// /* PASSWORD TOGGLE ICON */
+// .toggle-password {
+//   position: absolute;
+//   right: 40px;
+//   top: 260px;
+//   color: #8b0000;
+//   cursor: pointer;
+// }
+
+// /* BUTTON */
+// .btn {
+//   width: 100%;
+//   padding: 10px;
+//   background-color: #8b0000;
+//   color: white;
+//   border: none;
+//   border-radius: 8px;
+//   font-size: 16px;
+//   cursor: pointer;
+//   transition: 0.3s;
+//   font-weight: bold;
+//   margin-top: 10px;
+// }
+
+// .btn:hover {
+//   background-color: #a52a2a;
+//   transform: scale(1.03);
+// }
+
+// .custom-item {
+//   --background: rgba(255, 255, 255, 0.719);
+//   --highlight-color-focused: #000000;
+//   margin-top: 18px;
+//   border-radius: 10px;
+//   align-items: center;
+//   transition: 0.3s;
+// }
+
+// .custom-item:focus-within {
+//   box-shadow: 0 0 12px rgba(79, 195, 247, 0.5);
+// }
+
+// .custom-item ion-icon {
+//   color: #4fc3f7;
+//   font-size: 1.3rem;
+// }
+
+// ion-input {
+//   color: #fff;
+//   font-size: 1rem;
+// }
+
+// .eye-icon {
+//   color: #4fc3f7;
+//   font-size: 1.3rem;
+//   cursor: pointer;
+// }
+
+
+
+
+
+
+
+// ***********************************BELOW CHANGE IS WITHOUT IMAGE ON LOGIN******************
 
 
 
 .login-page {
-  --background: #f2f2f5;
+  --background: #440101e7;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
-/* Wrapper to center content */
+
+/* Wrapper */
 .login-wrapper {
   width: 100%;
   display: flex;
@@ -251,87 +394,110 @@
   align-items: center;
   height: 100%;
   padding: 20px;
-  background-color: #440101e7;
-  overflow: hidden;
-  position: fixed;
 }
+
 /* LOGIN BOX */
 .login-box {
-  background: linear-gradient(to bottom, #fff8e1, #f8e8c8);
   width: 350px;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
+  border-radius: 18px;
+  background: linear-gradient(to bottom, #fff8e1, #f8e8c8);
   border: 2px solid #c49a3a;
-  padding-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
   position: relative;
 }
 
-/* IMAGE HEADER */
-.login-image {
-  //background: url('src/assets/ashirvad.jpeg') no-repeat center center;  //AAshirwad change
-  background: url('src/assets/Rc65.jpeg') no-repeat center center; //Rc chiken 
-  background-size: cover;
-  //height: 160px; // this suiatable for the AAshirvad hotel
-  height: 215px; //Rc chiken
-  width: 100%;
+/* HEADER BANNER */
+.login-top-banner {
+  height: 160px;
+  background: linear-gradient(135deg, #8b0000, #a52a2a);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Artistic circles */
+.circle1, .circle2 {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+.circle1 {
+  width: 120px;
+  height: 120px;
+  top: -20px;
+  left: -30px;
+}
+.circle2 {
+  width: 150px;
+  height: 150px;
+  bottom: -30px;
+  right: -40px;
+}
+
+/* Text in banner */
+.app-title {
+  z-index: 2;
+  color: #fff;
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.app-subtitle {
+  z-index: 2;
+  color: #ffe9c6;
+  font-size: 0.9rem;
+  margin-top: 4px;
 }
 
 /* FORM */
 form {
-  padding: 0 30px 25px;
+  padding: 20px 25px;
 }
 
-/* INPUTS */
-.input-group {
-  margin-bottom: 15px;
-  text-align: left;
+/* INPUT ITEMS */
+.custom-item {
+  --background: rgba(255, 255, 255, 0.9);
+  margin-top: 18px;
+  border-radius: 10px;
+  transition: 0.3s;
 }
 
-.input-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #5a3c00;
+.custom-item:focus-within {
+  box-shadow: 0 0 12px rgba(79, 195, 247, 0.6);
 }
 
-.input-group input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #b8860b;
-  border-radius: 8px;
-  font-size: 14px;
-  background-color: #fffaf0;
-  outline: none;
+/* Icons */
+.custom-item ion-icon {
+  color: #4fc3f7;
+  font-size: 1.4rem;
 }
 
-.input-group input:focus {
-  border-color: #c49a3a;
-  box-shadow: 0 0 5px rgba(196, 154, 58, 0.8);
-}
-
-/* PASSWORD TOGGLE ICON */
-.toggle-password {
-  position: absolute;
-  right: 40px;
-  top: 260px;
-  color: #8b0000;
-  cursor: pointer;
+/* INPUT FIELD */
+ion-input {
+  color: black;
+  font-size: 1rem;
 }
 
 /* BUTTON */
 .btn {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #8b0000;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
+  border-radius: 10px;
+  font-size: 1.1rem;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(139, 0, 0, 0.4);
 }
 
 .btn:hover {
@@ -339,31 +505,8 @@ form {
   transform: scale(1.03);
 }
 
-.custom-item {
-  --background: rgba(255, 255, 255, 0.719);
-  --highlight-color-focused: #000000;
-  margin-top: 18px;
-  border-radius: 10px;
-  align-items: center;
-  transition: 0.3s;
-}
-
-.custom-item:focus-within {
-  box-shadow: 0 0 12px rgba(79, 195, 247, 0.5);
-}
-
-.custom-item ion-icon {
-  color: #4fc3f7;
-  font-size: 1.3rem;
-}
-
-ion-input {
-  color: #fff;
-  font-size: 1rem;
-}
-
-.eye-icon {
-  color: #4fc3f7;
-  font-size: 1.3rem;
-  cursor: pointer;
+/* Spinner */
+ion-spinner {
+  width: 22px;
+  height: 22px;
 }

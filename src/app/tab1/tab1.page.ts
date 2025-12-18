@@ -765,7 +765,7 @@ export class Tab1Page implements OnInit {
    currentTable: number = 1;
        // ----- Multi-table bills -----
   tables: any = {};
-  numberOfTables: number = 10;
+  numberOfTables: number = 25;
    devices: any[] = [];
   //selectedDevice: any = null;
    selectedItemId: number | null = null; 
@@ -1105,7 +1105,7 @@ startDecrement(index: number) {
   /* ----------------------
      Print helpers (ESC/POS)
      ---------------------- */
-  // Convert JS string to ArrayBuffer of raw bytes (simple 8-bit)
+  // Convert JS string to ArrayBuffer of raw bytes (simple 8-bit) for english text
   private strToArrayBuffer(str: string): ArrayBuffer {
     const buf = new ArrayBuffer(str.length);
     const bufView = new Uint8Array(buf);
@@ -1114,6 +1114,13 @@ startDecrement(index: number) {
     }
     return buf;
   }
+
+
+// below function is for marathi print
+//   private strToArrayBuffer(str: string): ArrayBuffer {
+//   return new TextEncoder().encode(str).buffer;
+// }
+
 
   // Format line to fixed-width (for typical 58mm 32-char paper or 80mm 48-char adjust)
   private formatLine(name: string, qty: number, price: number, total: number, nameWidth = 16) {
@@ -1125,82 +1132,15 @@ startDecrement(index: number) {
     return `${nm}${qtyStr}${priceStr}${totalStr}`;
   }
 
-// async printReceipt() {
-//     const bill = this.tables[this.currentTable];
-//     //await this.showPopup("⚡ Info", "printReceipt function triggered");
-//    if (!this.printerService.selectedDevice) {
-//       await this.showPopup("🚨 Error", "Select and connect a printer first!");
-//       return;
-//     }
-//    if (!bill.items || bill.items.length === 0) {
-//       await this.showPopup("🚨 Error", "No items found to print!");
-//       return;
-//     }
 
-//   const ESC = '\x1B';
-//   const GS = '\x1D';
-
-//   let grandTotal = 0;
-//   let receipt = '';
-
-//   // Header
-//   receipt += ESC + 'a' + String.fromCharCode(1); // center
-//   receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
-//   receipt += this.storeName;
-//   receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
-//   receipt += ESC + 'a' + String.fromCharCode(0); // left
-
-//   receipt += `Date: ${new Date().toLocaleString()}\n`;
-//   receipt += `Payment: ${this.paymentType}\n`;   // ✅ Added here
-//   receipt += '--------------------------------\n';
-
-//   receipt += '--------------------------------\n';
-//   receipt += 'Item           QTY  PRICE  TOTAL\n';
-//   receipt += '--------------------------------\n';
-
-//   bill.items.forEach((i: { qty: number; price: number; name: string; }) => {
-//       const total = i.qty * i.price;
-//       grandTotal += total;
-//       receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
-//     });
-
-
-//   receipt += '--------------------------------\n';
-
-//   // Grand total (normal size, bold only)
-//   receipt += ESC + 'a' + String.fromCharCode(2); // right align
-//   receipt += ESC + '\x45' + String.fromCharCode(1); // bold on
-//   receipt += `Grand Total: Rs ${grandTotal}\n`;
-//   receipt += ESC + '\x45' + String.fromCharCode(0); // bold off
-//   receipt += ESC + 'a' + String.fromCharCode(0); // left align
-
-//   receipt += '\nThank you! Visit Again!\n\n\n';
-
-//   // Feed & cut
-//   receipt += GS + 'V' + '\x00';
-
-//   const buf = this.strToArrayBuffer(receipt);
-//  try {
-//       await this.bluetoothSerial.write(buf);
-//       await this.showPopup("✅ Success", "Receipt sent to printer");
-//     } catch (err) {
-//       await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
-//     }
-// }
-
-
-
-
-
-
-// below is commented because no need of this 
+// below function is for english prints
 async printReceipt() {
   const bill = this.tables[this.currentTable];
 
-  // if (!this.printerService.selectedDevice) {
-  //   await this.showPopup("🚨 Error", "Select and connect a printer first!");
-  //   return;
-  // }
+  if (!this.printerService.selectedDevice) {
+    await this.showToast("Select and connect a printer first!");
+    return;
+  }
   // if (!bill.items || bill.items.length === 0) {
   //   await this.showPopup("🚨 Error", "No items found to print!");
   //   return;
@@ -1248,14 +1188,82 @@ async printReceipt() {
   receipt += GS + 'V' + '\x00';
 
   const buf = this.strToArrayBuffer(receipt);
-  // try {
-  //   await this.bluetoothSerial.write(buf);
-  //  await this.showPopup("✅ Success", "Receipt sent to printer");
-  // } catch (err) {
-  //   await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
-  // }
+  try {
+    await this.bluetoothSerial.write(buf);
+  // await this.showPopup("✅ Success", "Receipt sent to printer");
+  } catch (err) {
+    await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
+  }
 }
 
+
+
+
+
+//below code is for marathi 
+// async printReceipt() {
+//   const bill = this.tables[this.currentTable];
+
+//   // if (!this.printerService.selectedDevice) {
+//   //   await this.showPopup("🚨 Error", "Select and connect a printer first!");
+//   //   return;
+//   // }
+//   // if (!bill.items || bill.items.length === 0) {
+//   //   await this.showPopup("🚨 Error", "No items found to print!");
+//   //   return;
+//   // }
+
+//   const ESC = '\x1B';
+//   const GS = '\x1D';
+//   let grandTotal = 0;
+//   let receipt = '';
+//   // ➤ ENABLE UTF-8 / DEVANAGARI (Marathi) SUPPORT
+// receipt += ESC + 't' + '\x17';
+
+//  // 🏪 --- HEADER ---
+// receipt += ESC + 'a' + String.fromCharCode(1); // center align
+// receipt += ESC + '!' + String.fromCharCode(0x38); // double height & width + bold
+// receipt += this.storeName + '\n';
+// receipt += '\n';
+// receipt += ESC + '!' + String.fromCharCode(0); // normal text
+// receipt += `Date: ${new Date().toLocaleString()}\n`;
+// receipt += '--------------------------------\n';
+
+//   // 🧾 --- TABLE HEADER ---
+//   receipt += 'Item           QTY  PRICE  TOTAL\n';
+//   receipt += '--------------------------------\n';
+
+// // 🧮 --- ITEM LOOP ---
+// bill.items.forEach((i: { qty: number; price: number; name: string }) => {
+//   const total = i.qty * i.price;
+//   grandTotal += total;
+//   receipt += this.formatLine(i.name, i.qty, i.price, total) + '\n';
+// });
+
+//   receipt += '--------------------------------\n';
+
+//  // 💰 --- TOTAL ---
+// receipt += ESC + 'a' + String.fromCharCode(2);  // right align
+// receipt += ESC + '!' + String.fromCharCode(0x20); // double height, bold
+// receipt += `Total:  ${grandTotal} Rs\n`;
+// receipt += ESC + '!' + String.fromCharCode(0);  // normal
+// receipt += ESC + 'a' + String.fromCharCode(1);  // center again
+
+//   // 🙏 --- FOOTER ---
+//   receipt += '\nThank you! Visit Again!\n\n';
+//   //receipt += 'धन्यवाद! पुन्हा भेट द्या!\n\n';
+
+//   // ✂️ --- CUT PAPER ---
+//   receipt += GS + 'V' + '\x00';
+
+//   const buf = this.strToArrayBuffer(receipt);
+//   // try {
+//   //   await this.bluetoothSerial.write(buf);
+//   //  await this.showPopup("✅ Success", "Receipt sent to printer");
+//   // } catch (err) {
+//   //   await this.showPopup("❌ Failed", "Print failed: " + JSON.stringify(err));
+//   // }
+// }
 
 
  get grandTotal(): number {
@@ -1301,7 +1309,8 @@ async saveTransaction() {
         //alert('Transaction saved successfully');
           // Only print if checkbox is checked
           if (bill.shouldPrint) {
-             //await this.showPopup("🖨️ Info", "Printing receipt now...");
+            console.log(bill.shouldPrint);
+            // await this.showToast( "Printing receipt now...");
             await this.printReceipt();
           }
         this.tables[this.currentTable] = { items: [], paymentType: 'Cash', shouldPrint: true };

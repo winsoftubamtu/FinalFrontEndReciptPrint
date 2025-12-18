@@ -588,10 +588,21 @@
             </ion-item>
 
             <!-- Print Option -->
-            <!-- <ion-item lines="none" style="margin-top: 10px;">
+             <!-- <ion-item lines="none" style="margin-top: 10px;">
               <ion-label>Print Receipt?</ion-label>
-              <ion-checkbox slot="start" [(ngModel)]="tables[currentTable].shouldPrint"></ion-checkbox>
-            </ion-item> -->
+              <ion-checkbox slot="start"  [checked]="tables[currentTable].shouldPrint" [(ngModel)]="tables[currentTable].shouldPrint"></ion-checkbox>
+            </ion-item>  -->
+
+
+            <!-- Print Option -->
+<!-- <ion-item lines="none" style="margin-top: 10px;">
+  <ion-label>Print Receipt?</ion-label>
+  <ion-checkbox
+    slot="start"
+    [(ngModel)]="tables[currentTable].shouldPrint">
+  </ion-checkbox>
+</ion-item> -->
+
 
             <!-- Action Buttons -->
             <ion-button expand="full" fill="solid"  style="margin-top: 30px; margin-bottom: 10px; background-color: #450101ef;" (click)="saveTransaction()">
