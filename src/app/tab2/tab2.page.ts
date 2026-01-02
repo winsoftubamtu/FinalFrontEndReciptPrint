@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, IonTitle, IonToolbar, LoadingController, ToastController } from '@ionic/angular/standalone';
+import { AlertController, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, IonTitle, IonToolbar, LoadingController, ToastController } from '@ionic/angular/standalone';
 import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
@@ -58,6 +58,7 @@ devices: any[] = [];
     private toastCtrl: ToastController,
 private storageService: StorageService,
     // private http: HttpClient,
+     private alertController: AlertController,
     private file: File,
     private transfer: FileTransfer,
     private fileOpener: FileOpener
@@ -352,7 +353,60 @@ async downloadAndInstall() {
 }
 
 
+async testPrinter() {
+  // 1. Check printer selected
+  if (!this.printerService.selectedDevice) {
+    await this.showToast('❌ No printer selected');
+    return;
+  }
 
+  const ESC = '\x1B';
+  const GS = '\x1D';
+
+  let testText = '';
+
+  // Center align
+  testText += ESC + 'a' + String.fromCharCode(1);
+  testText += ESC + '!' + String.fromCharCode(0x38);
+  testText += 'PRINTER TEST\n\n';
+
+  // Normal text
+  testText += ESC + '!' + String.fromCharCode(0);
+  testText += 'If you see this print,\n';
+  testText += 'Printer is WORKING ✅\n\n';
+
+  testText += `Date: ${new Date().toLocaleString()}\n`;
+  testText += '------------------------\n';
+  testText += 'Bluetooth Print Test\n';
+  testText += '------------------------\n\n';
+
+  // Cut paper
+  testText += GS + 'V' + '\x00';
+
+  try {
+    const buffer = this.strToArrayBuffer(testText);
+    await this.bluetoothSerial.write(buffer);
+    await this.showToast('✅ Test print sent');
+  } catch (err) {
+    await this.showPopup('❌ Printer Error', JSON.stringify(err));
+  }
+}
+  private strToArrayBuffer(str: string): ArrayBuffer {
+    const buf = new ArrayBuffer(str.length);
+    const bufView = new Uint8Array(buf);
+    for (let i = 0; i < str.length; i++) {
+      bufView[i] = str.charCodeAt(i) & 0xFF;
+    }
+    return buf;
+  }
+async showPopup(header: string, message: string) {
+  const alert = await this.alertController.create({
+    header,
+    message,
+    buttons: ['OK']
+  });
+  await alert.present();
+}
 
 
 }

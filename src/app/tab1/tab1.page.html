@@ -424,9 +424,9 @@
             </ion-item>
 
  
-            <ion-grid>
+            <!-- <ion-grid>
               <ion-row>
-                <ion-col size="4" *ngFor="let item of filteredItems" style="margin-bottom: 10px;">
+                <ion-col size="3" *ngFor="let item of filteredItems" style="margin-bottom: 10px;">
                   <ion-button
                     class="item-btn"
                     expand="block"
@@ -438,7 +438,38 @@
                   </ion-button>
                 </ion-col>
               </ion-row>
-            </ion-grid>
+            </ion-grid> -->
+
+<ion-grid>
+  <ion-row>
+    <ion-col
+      size="3"
+      *ngFor="let item of filteredItems"
+      class="item-col"
+    >
+      <ion-button
+        class="item-btn"
+        expand="block"
+        fill="solid"
+        [class.selected]="selectedItemId === item.itemid"
+        (click)="selectItem(item)"
+      >
+        <div class="item-content">
+          <div class="item-name">
+            {{ item.itemname }}
+          </div>
+          <div class="item-price">
+            {{ item.price | currency:'INR' }}
+          </div>
+        </div>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+
+
 
             <!-- <ion-grid>
   <ion-row>
@@ -606,10 +637,10 @@
 
             <!-- Action Buttons -->
             <ion-button expand="full" fill="solid"  style="margin-top: 30px; margin-bottom: 10px; background-color: #450101ef;" (click)="saveTransaction()">
-             सेव करा
+             बिल तयार करा
             </ion-button>
 
-            <!-- <ion-button expand="full" color="success" style="margin-top: 10px;" (click)="printReceipt()">
+            <!-- <ion-button expand="full" style="margin-top: 10px;" (click)="printReceipt()">
               <ion-icon name="print-outline" slot="start"></ion-icon>
               Print Transaction
             </ion-button> -->

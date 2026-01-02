@@ -746,6 +746,7 @@ import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { StorageService } from '../storage.service';
 import { PrinterService } from '../printer-service';
+import { BillLocalService } from '../bill-local-service';
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -797,7 +798,8 @@ tablesArray: number[] = [];
     private alertController: AlertController,
     private printerService: PrinterService,
     private toastCtrl: ToastController,
-    private gestureCtrl: GestureController
+    private gestureCtrl: GestureController,
+    private billLocalService: BillLocalService
     
   ) {
     
@@ -807,10 +809,17 @@ tablesArray: number[] = [];
     }
   }
    async ngOnInit() {
+     await this.billLocalService.init();
    console.log(this.filteredItems)
     
     this.fetchItems();
       this.storeName = await this.storageService.get('storeName');
+      
+  for (let i = 1; i <= this.numberOfTables; i++) {
+    const savedBill = await this.billLocalService.getBill(i);
+    this.tables[i] = savedBill ?? { items: [], paymentType: 'Cash', shouldPrint: true };
+  }
+
         this.tablesArray = Array.from({ length: this.numberOfTables }, (_, i) => i + 1);
 
     console.log('🏪 Loaded StoreName:', this.storeName);
@@ -1019,12 +1028,15 @@ toggleConnection(device: any) {
     this.searchText = '';
     this.quantity = null;
     this.price = null;
+   this.billLocalService.saveBill(this.currentTable, bill);
   }
 
 
 increaseQty(index: number) {
     //this.items[index].qty++;
     this.tables[this.currentTable].items[index].qty++;
+    this.billLocalService.saveBill(this.currentTable, this.tables[this.currentTable]);
+
   }
 
   decreaseQty(index: number) {
@@ -1034,6 +1046,8 @@ increaseQty(index: number) {
     } else {
       bill.items.splice(index, 1);
     }
+    this.billLocalService.saveBill(this.currentTable, this.tables[this.currentTable]);
+
   }
 
   startHold(index: number, action: 'increase' | 'decrease') {
@@ -1052,6 +1066,8 @@ stopHold() {
 singleClick(index: number, action: 'increase' | 'decrease') {
   if (this.isHolding) return; // ignore if holding
   this.performAction(index, action);
+  this.billLocalService.saveBill(this.currentTable, this.tables[this.currentTable]);
+
 }
 
 performAction(index: number, action: 'increase' | 'decrease') {
@@ -1067,6 +1083,8 @@ performAction(index: number, action: 'increase' | 'decrease') {
       bill.items.splice(index, 1);
     }
   }
+  this.billLocalService.saveBill(this.currentTable, this.tables[this.currentTable]);
+
 }
 
 onQtyChange(index: number) {
@@ -1076,6 +1094,8 @@ onQtyChange(index: number) {
   if (item.qty < 1 || isNaN(item.qty)) {
     item.qty = 1;
   }
+  this.billLocalService.saveBill(this.currentTable, this.tables[this.currentTable]);
+
 }
 //   onQtyChange(index: number) {
 //   const bill = this.tables[this.currentTable];
@@ -1100,6 +1120,8 @@ startDecrement(index: number) {
 
   removeItem(idx: number) {
     this.tables[this.currentTable].items.splice(idx, 1);
+    this.billLocalService.saveBill(this.currentTable, this.tables[this.currentTable]);
+
   }
 
   /* ----------------------
@@ -1153,7 +1175,7 @@ async printReceipt() {
 
   // 🏪 --- HEADER ---
   receipt += ESC + 'a' + String.fromCharCode(1); // center align
-  receipt += ESC + '!' + String.fromCharCode(0x38); // double height & width + bold
+  receipt += ESC + '!' + String.fromCharCode(0x36); // double height & width + bold
   receipt += this.storeName + '\n';
   receipt+='\n';
   receipt += ESC + '!' + String.fromCharCode(0); // normal text
@@ -1177,7 +1199,7 @@ async printReceipt() {
   // 💰 --- GRAND TOTAL ---
   receipt += ESC + 'a' + String.fromCharCode(2); // right align
   receipt += ESC + '!' + String.fromCharCode(0x20); // double height, bold
-  receipt += `Total:  ${grandTotal}Rs \n`;
+  receipt += `Total:  ${grandTotal} Rs \n`;
   receipt += ESC + '!' + String.fromCharCode(0); // reset to normal
   receipt += ESC + 'a' + String.fromCharCode(1); // center align
 
@@ -1313,6 +1335,8 @@ async saveTransaction() {
             // await this.showToast( "Printing receipt now...");
             await this.printReceipt();
           }
+          // DELETE local bill
+await this.billLocalService.deleteBill(this.currentTable);
         this.tables[this.currentTable] = { items: [], paymentType: 'Cash', shouldPrint: true };
       },
       error: (err) => {

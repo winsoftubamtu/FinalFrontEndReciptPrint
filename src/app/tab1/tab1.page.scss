@@ -347,14 +347,67 @@ ion-segment-button {
   border-radius: 0; /* pill effect handled by parent */
 }
 
-.item-btn {
-  --background: #1976d2;
-  --color:black;
-  font-weight: 600;
-  height: 70px;
-  text-transform: uppercase;
-  box-shadow: 0 3px 10px rgba(25, 118, 210, 0.3);
+// .item-btn {
+//   --background: #1976d2;
+//   --color:black;
+//   font-weight: 600;
+//   height: 80px;
+//   text-transform: uppercase;
+//   box-shadow: 0 3px 10px rgba(25, 118, 210, 0.3);
+// }
+
+.item-col {
+  padding: 4px;
 }
+
+.item-btn {
+  --background: #e3f2fd;
+  --color: #0d47a1;
+  min-height: 70px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  text-transform: none;
+}
+
+.item-btn.selected {
+  --background: #1976d2;
+  --color: #ffffff;
+}
+
+.item-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.item-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  max-height: 2.4em;   /* max 2 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-price {
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-top: 3px;
+  color: #2e7d32;
+}
+@media (max-height: 700px) {
+  .item-btn {
+    min-height: 62px;
+  }
+
+  .item-name {
+    font-size: 11.5px;
+  }
+}
+
 
 // ion-content {
 //   --padding-start: 0;
