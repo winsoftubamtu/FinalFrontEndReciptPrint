@@ -72,6 +72,7 @@ username = '';
     await this.storageService.set('storeName', response.storeName);
 
     await this.storageService.set('Passwordhash',response.passwordhash);
+    await this.storageService.set('phoneNo',response.phoneNo);
 
      await this.storageService.set('Address',response.address);
       await this.storageService.set('Expirydate',response.expirydate);
@@ -81,9 +82,13 @@ username = '';
     console.log('pass', response.passwordhash);
      console.log('add', response.passwordhash, response.expirydate);
         
-
-       // this.router.navigateByUrl('/tabs/tab1', { replaceUrl: true }); // ✅ redirect to tab1
-       this.router.navigate(['/tabs', 'tab1'], { replaceUrl: true });
+ console.log(await this.storageService.get('storeName'));
+  console.log(await this.storageService.get('Address'));
+     
+   setTimeout(() => {
+    this.router.navigate(['/tabs', 'tab1'], { replaceUrl: true });
+  }, 200);
+       //this.router.navigate(['/tabs', 'tab1'], { replaceUrl: true });
 
       },
       error: (err: HttpErrorResponse) => {

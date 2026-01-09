@@ -9,6 +9,7 @@ export interface AuthResponse {
   passwordhash:string;
   address:string;
   expirydate:string;
+  phoneNo:string;
 }
 
 @Injectable({

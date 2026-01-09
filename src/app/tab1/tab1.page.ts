@@ -774,6 +774,7 @@ export class Tab1Page implements OnInit {
     storeName: string = '';
     address:string='';
   expirydate :string = '';
+  phoneNo:string='';
      items: Array<{id:number, name: string, qty: number, price: number }> = [];
   // search related
   allItems: Item[] = [];
@@ -810,11 +811,16 @@ tablesArray: number[] = [];
   }
    async ngOnInit() {
      await this.billLocalService.init();
+      await this.storageService.init();
    console.log(this.filteredItems)
     
     this.fetchItems();
-      this.storeName = await this.storageService.get('storeName');
-      
+      this.storeName = (await this.storageService.get('storeName')) ?? '';
+  this.address = (await this.storageService.get('Address')) ?? '';
+this.phoneNo = (await this.storageService.get('phoneNo')) ?? '';
+  console.log('🏪 Store:', this.storeName);
+  console.log('📍 Address:', this.address);
+
   for (let i = 1; i <= this.numberOfTables; i++) {
     const savedBill = await this.billLocalService.getBill(i);
     this.tables[i] = savedBill ?? { items: [], paymentType: 'Cash', shouldPrint: true };
@@ -823,7 +829,9 @@ tablesArray: number[] = [];
         this.tablesArray = Array.from({ length: this.numberOfTables }, (_, i) => i + 1);
 
     console.log('🏪 Loaded StoreName:', this.storeName);
+    console.log('address',this.address);
     await this.requestBluetoothPermissions();
+    
     
   }
  async showPopup(header: string, message: string) {
@@ -1154,6 +1162,27 @@ startDecrement(index: number) {
     return `${nm}${qtyStr}${priceStr}${totalStr}`;
   }
 
+  wrapText(text: string, maxLength: number): string {
+  const words = text.split(' ');
+  let lines: string[] = [];
+  let currentLine = '';
+
+  words.forEach(word => {
+    if ((currentLine + word).length <= maxLength) {
+      currentLine += (currentLine ? ' ' : '') + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  });
+
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  return lines.join('\n');
+}
+
 
 // below function is for english prints
 async printReceipt() {
@@ -1174,9 +1203,49 @@ async printReceipt() {
   let receipt = '';
 
   // 🏪 --- HEADER ---
-  receipt += ESC + 'a' + String.fromCharCode(1); // center align
-  receipt += ESC + '!' + String.fromCharCode(0x36); // double height & width + bold
-  receipt += this.storeName + '\n';
+  // receipt += ESC + 'a' + String.fromCharCode(1); // center align
+  // receipt += ESC + '!' + String.fromCharCode(0x36); // double height & width + bold
+  // receipt += this.storeName + '\n';
+
+  // 🏪 --- HEADER ---
+receipt += ESC + 'a' + String.fromCharCode(1); // center align
+
+const storeName = this.storeName; // "Sudhir Dosa & Idali-Vada"
+const address = this.address;
+
+// 🔹 Store name always ONE LINE
+if (storeName.length <= 16) {
+  // BIG text for short name
+  receipt += ESC + '!' + String.fromCharCode(0x36); // double height & width
+} else {
+  // SMALL/NORMAL text for long name (fits one line)
+  receipt += ESC + '!' + String.fromCharCode(0x14); // Font B (small)
+}
+
+receipt += storeName + '\n';
+receipt+='\n';
+// reset text
+receipt += ESC + '!' + String.fromCharCode(0);
+/// 📍 Address — readable ONE line (no tiny font)
+// 📍 Address — normal look, ONE LINE, no ugly wrap
+if (address && address.trim()) {
+  receipt += ESC + 'a' + String.fromCharCode(0); // center
+
+  // Use Font B (narrower but readable)
+  receipt += ESC + '!' + String.fromCharCode(0x08); // Font B, normal height
+
+  // IMPORTANT: remove line breaks from stored address
+  const cleanAddress = address.replace(/\r?\n|\r/g, ' ');
+
+  receipt += cleanAddress + '\n';
+
+  // Reset font
+  receipt += ESC + '!' + String.fromCharCode(0x00);
+}
+
+
+   receipt += ESC + '!' + String.fromCharCode(0); // normal text
+  receipt += `contact no: ${this.phoneNo}`;
   receipt+='\n';
   receipt += ESC + '!' + String.fromCharCode(0); // normal text
   receipt += `Date: ${new Date().toLocaleString()}\n`;
@@ -1346,6 +1415,11 @@ await this.billLocalService.deleteBill(this.currentTable);
     });
   
 }
+
+// checkdata() {
+//   console.log('Store:', this.storeName ?? 'NOT LOADED');
+//   console.log('Address:', this.address ?? 'NOT LOADED');
+// }
 
 
 
