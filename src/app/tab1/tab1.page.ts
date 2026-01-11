@@ -735,6 +735,8 @@ import {
   AlertController,
   ToastController,
   GestureController,
+    IonButtons,
+  IonMenuButton
 
   
 } from '@ionic/angular/standalone';
@@ -751,7 +753,7 @@ import { BillLocalService } from '../bill-local-service';
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  imports: [IonItemOption,IonSpinner,IonSelectOption,IonSelect,CommonModule, FormsModule,
+  imports: [ IonButtons,IonMenuButton,IonItemOption,IonSpinner,IonSelectOption,IonSelect,CommonModule, FormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonButton, IonItem, IonList, IonLabel, IonInput, IonTextarea,
     IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonRadio,IonSegment, IonSegmentButton, ExploreContainerComponent],

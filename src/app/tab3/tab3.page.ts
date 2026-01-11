@@ -199,7 +199,8 @@ import {
   IonSegment,
   IonSegmentContent,
   IonSegmentView,
-
+  IonButtons,
+  IonMenuButton
   
 } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
@@ -214,7 +215,8 @@ import { StorageService } from '../storage.service';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonSegment,IonSegmentButton, IonSegmentContent, IonSegmentView,IonDatetime,IonTitle,IonToolbar,IonHeader, IonSegmentButton, IonCardContent, IonGrid, IonCard, IonCardHeader, IonCardTitle, IonRow, IonCol,IonButton, IonInput,
+  imports: [ IonButtons,
+    IonMenuButton,IonSegment,IonSegmentButton, IonSegmentContent, IonSegmentView,IonDatetime,IonTitle,IonToolbar,IonHeader, IonSegmentButton, IonCardContent, IonGrid, IonCard, IonCardHeader, IonCardTitle, IonRow, IonCol,IonButton, IonInput,
   IonList,
   IonItemOption,CommonModule, FormsModule, IonContent, IonItem, IonLabel, IonSelect, IonSelectOption, IonSpinner, ExploreContainerComponent],
 })

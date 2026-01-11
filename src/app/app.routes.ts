@@ -30,4 +30,15 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./tabs/tabs.routes').then((m) => m.routes),
   },
+  {
+    path: 'add-menu',
+    // canActivate: [AuthGuard], 
+    loadComponent: () => import('./add-menu/add-menu.page').then( m => m.AddMenuPage)
+  },
+  {
+    path: 'profit-loss',
+    // canActivate: [AuthGuard], 
+    loadComponent: () => import('./profit-loss/profit-loss.page').then( m => m.ProfitLossPage)
+  },
+
 ];

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AlertController, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, IonTitle, IonToolbar, LoadingController, ToastController } from '@ionic/angular/standalone';
+import { AlertController, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, IonTitle, IonToolbar, LoadingController, ToastController,  IonButtons,
+  IonMenuButton } from '@ionic/angular/standalone';
 import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
@@ -22,7 +23,8 @@ import { StorageService } from '../storage.service';
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
   standalone:true,
-   imports: [
+   imports: [  IonButtons,
+  IonMenuButton,
     CommonModule, FormsModule,
     IonContent, IonHeader, IonToolbar, IonTitle,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
