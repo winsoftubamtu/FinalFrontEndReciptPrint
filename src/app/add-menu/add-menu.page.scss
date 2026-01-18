@@ -1,0 +1,80 @@
+/* TABLE SECTION */
+.table-section {
+  margin: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Scrollable table body */
+.table-wrapper {
+  max-height: 60vh;
+  overflow-y: auto;
+  display: block;
+}
+
+/* Table base */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+/* Fixed header */
+thead {
+  position: sticky;
+  top: 0;
+  background: #450101ef;
+  color: #fff;
+  z-index: 2;
+}
+
+thead th {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Table body */
+tbody tr:nth-child(even) {
+  background: #f7f7f7;
+}
+
+tbody td {
+  padding: 8px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+/* Truncate long item names */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+
+/* Action buttons */
+td ion-button {
+  --padding-start: 4px;
+  --padding-end: 4px;
+  margin: 0 2px;
+}
+
+/* FORM CARD */
+ion-card {
+  margin: 12px;
+  border-radius: 12px;
+}
+
+/* Primary button (reuse your theme) */
+.btn-primary {
+  --background: #450101ef;
+  --color: #ffffff;
+  --border-radius: 10px;
+  font-weight: 600;
+}
+
+td ion-icon {
+  font-size: 20px;
+}

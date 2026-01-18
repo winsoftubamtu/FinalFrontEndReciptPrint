@@ -59,6 +59,17 @@ export const routes: Routes = [
         loadComponent: () =>
           import('../tab3/tab3.page').then((m) => m.Tab3Page),
       },
+        // ✅ ADD THESE
+      {
+        path: 'add-menu',
+        loadComponent: () =>
+          import('../add-menu/add-menu.page').then(m => m.AddMenuPage),
+      },
+      {
+        path: 'profit-loss',
+        loadComponent: () =>
+          import('../profit-loss/profit-loss.page').then(m => m.ProfitLossPage),
+      },
       {
         path: '',
         redirectTo: 'tab1',   // 👈 relative redirect (no leading /)

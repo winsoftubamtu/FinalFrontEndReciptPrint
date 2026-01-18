@@ -1,13 +1,84 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>add-menu</ion-title>
+<ion-header>
+  <ion-toolbar style="--background: #450101ef; --color: white;">
+    <ion-title>{{storeName}}</ion-title>
+       <!-- ADD ONLY THIS -->
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">add-menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
+ <ion-card style="margin: 12px;">
+    <ion-card-header>
+      <ion-card-title>Add Item</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <ion-item>
+        <ion-label position="stacked">Item Name</ion-label>
+        <ion-input [(ngModel)]="itemName"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Price</ion-label>
+        <ion-input type="number" [(ngModel)]="price"></ion-input>
+      </ion-item>
+
+      <ion-button (click)="addItem()" class="btn-primary" expand="block" style="margin-top: 15px;">
+        Add Item
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
+<ion-content>
+
+  <!-- ITEMS TABLE (MATCHING YOUR TABLE CSS) -->
+  <div class="table-section">
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Item Name</th>
+            <th>Price</th>
+            <th style="text-align:center;">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td class="truncate">
+              {{ item.itemname }}
+            </td>
+
+            <td>
+              ₹ {{ item.price }}
+            </td>
+
+          <td style="text-align:center;">
+  <ion-button fill="clear" (click)="editItem(item)">
+    edit
+  </ion-button>
+
+  <!-- <ion-button fill="clear" color="danger"
+              (click)="confirmDelete(item.itemid)">
+          delete
+            </ion-button> -->
+</td>
+
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+  </div>
+
+  <!-- ADD ITEM FORM (SIMPLE & CLEAN, SAME THEME) -->
+ 
+
 </ion-content>
+

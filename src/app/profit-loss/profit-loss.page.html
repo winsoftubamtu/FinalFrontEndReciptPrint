@@ -1,19 +1,207 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar style="--background: #450101ef; --color: white;">
-    <ion-title>{{storeName}}</ion-title>
-       <!-- ADD ONLY THIS -->
+    <ion-title>{{ storeName }}</ion-title>
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profit-loss</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+<ion-content>
 
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Select Date Range</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">From Date</ion-label>
+        <ion-input type="date" [(ngModel)]="fromDate"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">To Date</ion-label>
+        <ion-input type="date" [(ngModel)]="toDate"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" style="margin-top: 12px;"
+                  (click)="fetchReport()">
+        Generate Report
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="loading">
+  <ion-card-content class="ion-text-center">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading report...</p>
+  </ion-card-content>
+</ion-card>
+
+
+  <ion-card *ngIf="itemSummary.length">
+    <ion-card-header>
+      <ion-card-title>Summary</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><strong>Total Sales:</strong> ₹ {{ totalSalesAmount }}</p>
+      <p><strong>Total Items Sold:</strong> {{ totalItemsSold }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="itemSummary.length">
+    <ion-card-header>
+      <ion-card-title>Item-wise Sales</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of itemSummary">
+          <ion-label>
+            <h2>{{ item.itemName }}</h2>
+            <p>Quantity Sold: {{ item.totalQty }}</p>
+            <p>Revenue: ₹ {{ item.totalRevenue }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content> -->
+
+
+
+
+
+
+<ion-header>
+  <ion-toolbar style="--background:#450101ef; --color:white;">
+    <ion-title>{{ storeName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- DATE FILTER -->
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">From Date</ion-label>
+        <ion-input type="date" [(ngModel)]="fromDate"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">To Date</ion-label>
+        <ion-input type="date" [(ngModel)]="toDate"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" (click)="fetchReport()" style="margin-top:12px;">
+        Generate Report
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- LOADING -->
+  <ion-card *ngIf="loading">
+    <ion-card-content class="ion-text-center">
+      <ion-spinner></ion-spinner>
+      <p>Loading report...</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- SUMMARY -->
+  <ion-grid *ngIf="itemSummary.length">
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="summary-card">
+          <h3>₹ {{ totalSalesAmount }}</h3>
+          <p>Total Sales</p>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="summary-card">
+          <h3>{{ totalItemsSold }}</h3>
+          <p>Items Sold</p>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- CASH VS ONLINE -->
+  <ion-card *ngIf="itemSummary.length">
+    <ion-card-header>
+      <ion-card-title>Payment Split</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Cash</p>
+      <ion-progress-bar [value]="cashSales / totalSalesAmount" color="success"></ion-progress-bar>
+
+      <p style="margin-top:8px;">Online</p>
+      <ion-progress-bar [value]="onlineSales / totalSalesAmount" color="primary"></ion-progress-bar>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ITEM SALES -->
+  <ion-card *ngIf="itemSummary.length">
+    <ion-card-header>
+      <ion-card-title>Item-wise Sales</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngFor="let item of itemSummary" class="bar-item">
+        <div class="bar-header">
+          <strong>{{ item.itemName }}</strong>
+          <span>{{ item.totalQty }}</span>
+        </div>
+        <ion-progress-bar
+          [value]="item.totalQty / maxQuantity"
+          color="tertiary">
+        </ion-progress-bar>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- LOW SELLING ITEMS -->
+  <ion-card *ngIf="lowSellingItems.length">
+    <ion-card-header>
+      <ion-card-title color="danger">Low Selling Items</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of lowSellingItems">
+          {{ item.itemName }} — {{ item.totalQty }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- DAILY SALES -->
+  <ion-card *ngIf="dailySales.length">
+    <ion-card-header>
+      <ion-card-title>Daily Sales</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let d of dailySales">
+          {{ d.date }} — ₹ {{ d.amount }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- EXPORT -->
+<ion-button
+  expand="block"
+  color="dark"
+  (click)="downloadReport()"
+  style="margin:16px;"
+>
+  Download Report (PDF)
+</ion-button>
+
+
+</ion-content>

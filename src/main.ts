@@ -13,6 +13,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { Drivers } from '@ionic/storage'; 
 import { AuthInterceptor } from './app/AuthInterceptor ';
 
+
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

@@ -1,0 +1,31 @@
+ion-card {
+  margin: 12px;
+  border-radius: 14px;
+}
+
+.summary-card {
+  text-align: center;
+  padding: 14px;
+}
+
+.summary-card h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #2e7d32;
+}
+
+.summary-card p {
+  margin-top: 4px;
+  font-size: 13px;
+  color: gray;
+}
+
+.bar-item {
+  margin-bottom: 12px;
+}
+
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}

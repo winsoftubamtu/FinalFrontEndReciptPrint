@@ -10,6 +10,12 @@ export interface Item {
 }
 
 
+/** DTO for Add / Update */
+export interface ItemRequest {
+  itemname: string;
+  price: number;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +30,16 @@ export class ItemService {
     return this.http.get<Item[]>(this.apiUrl);
   }
 
-  
+    addItem(item: ItemRequest): Observable<any> {
+    return this.http.post(this.apiUrl, item);
+  }
+
+  updateItem(id: number, item: ItemRequest): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, item);
+  }
+
+  deleteItem(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
   
 }

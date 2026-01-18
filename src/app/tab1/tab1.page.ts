@@ -1223,10 +1223,15 @@ if (storeName.length <= 16) {
   // SMALL/NORMAL text for long name (fits one line)
   receipt += ESC + '!' + String.fromCharCode(0x14); // Font B (small)
 }
+  // receipt += '--------------------------------\n';
 
 receipt += storeName + '\n';
-receipt+='\n';
+  receipt += '--------------------------------\n';
+
+// receipt+='\n';
 // reset text
+  // receipt += '--------------------------------\n';
+
 receipt += ESC + '!' + String.fromCharCode(0);
 /// 📍 Address — readable ONE line (no tiny font)
 // 📍 Address — normal look, ONE LINE, no ugly wrap
@@ -1238,6 +1243,7 @@ if (address && address.trim()) {
 
   // IMPORTANT: remove line breaks from stored address
   const cleanAddress = address.replace(/\r?\n|\r/g, ' ');
+// receipt+='\n';
 
   receipt += cleanAddress + '\n';
 
@@ -1251,6 +1257,10 @@ if (address && address.trim()) {
   receipt+='\n';
   receipt += ESC + '!' + String.fromCharCode(0); // normal text
   receipt += `Date: ${new Date().toLocaleString()}\n`;
+    receipt += '--------------------------------\n';
+
+  receipt+='\n';
+
  // receipt += `Payment: ${this.paymentType}\n`;
   receipt += '--------------------------------\n';
 
