@@ -1226,9 +1226,9 @@ if (storeName.length <= 16) {
   // receipt += '--------------------------------\n';
 
 receipt += storeName + '\n';
-  receipt += '--------------------------------\n';
+  // receipt += '--------------------------------\n';
 
-// receipt+='\n';
+ receipt+='\n';
 // reset text
   // receipt += '--------------------------------\n';
 
@@ -1259,7 +1259,7 @@ if (address && address.trim()) {
   receipt += `Date: ${new Date().toLocaleString()}\n`;
     receipt += '--------------------------------\n';
 
-  receipt+='\n';
+  // receipt+='\n';
 
  // receipt += `Payment: ${this.paymentType}\n`;
   receipt += '--------------------------------\n';
